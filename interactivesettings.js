@@ -2,7 +2,7 @@ export function setDraggable(id, position, children) {
     interact("#" + id).draggable({
         listeners: {
             start(event) {
-                event.target.style.zIndex = 100
+                event.target.style.zIndex = 10000000
             },
             move(event) {
                 children.forEach((child) => {
@@ -87,13 +87,12 @@ export function setDropzone(id, setRelation) {
     interact("#" + id).dropzone({
         ondrop: (event) => {
             setRelation(event.target.id, event.relatedTarget.id);
-            
+
             let dropzoneElement = document.getElementById(id + "-drop");
             dropzoneElement.classList.remove('above')
         },
         ondragenter: function (event) {
             let dropzoneElement = document.getElementById(id + "-drop");
-            console.log(dropzoneElement)
             dropzoneElement.classList.add('above')
 
         },
@@ -105,7 +104,6 @@ export function setDropzone(id, setRelation) {
 
 
     interact("#" + id).on('tap', function (event) {
-        // event.currentTarget.style.color = 'red'
         event.preventDefault()
     })
 }

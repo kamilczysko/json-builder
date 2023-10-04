@@ -9,6 +9,10 @@ export default class Schema {
     this.setMainContainer((childId) => this.evictChild(childId));
   }
 
+  getMainElement() {
+    return this.elements.get("element-0");
+  }
+
   setMainContainer(evictChild) {
     interact("#schemaContainer").dropzone({
       ondrop: (event) => {

@@ -10,3 +10,7 @@ document.getElementById("addButton").onclick = () => {
     add();
 }
 
+
+document.getElementById("generate").onclick = () => {
+    console.log("{"+schema.getMainElement().getJSON()+"}");
+}

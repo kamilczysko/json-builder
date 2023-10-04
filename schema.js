@@ -12,7 +12,6 @@ export default class Schema {
   setMainContainer(evictChild) {
     interact("#schemaContainer").dropzone({
       ondrop: (event) => {
-        console.log(event.relatedTarget.id)
         evictChild(event.relatedTarget.id);
       }
     })

@@ -1,5 +1,5 @@
 import "interact"
-import * as I from "interactivesettings"
+import * as InteractiveSettings from "interactivesettings"
 
 export default class Element {
   constructor(id, name, children, parent, isArray, setRelation) {
@@ -24,9 +24,9 @@ export default class Element {
       
     }
     
-    I.setDraggable(id, this.position, this.children);
-    I.setResizable(id);
-    I.setDropzone(id, setRelation);
+    InteractiveSettings.setDraggable(id, this.position, this.children);
+    InteractiveSettings.setResizable(id);
+    InteractiveSettings.setDropzone(id, setRelation);
   }
 
   addChild(child) {

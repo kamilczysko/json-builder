@@ -87,14 +87,25 @@ export function setDropzone(id, setRelation) {
     interact("#" + id).dropzone({
         ondrop: (event) => {
             setRelation(event.target.id, event.relatedTarget.id);
-        }
+            
+            let dropzoneElement = document.getElementById(id + "-drop");
+            dropzoneElement.classList.remove('above')
+        },
+        ondragenter: function (event) {
+            let dropzoneElement = document.getElementById(id + "-drop");
+            console.log(dropzoneElement)
+            dropzoneElement.classList.add('above')
+
+        },
+        ondragleave: function (event) {
+            let dropzoneElement = document.getElementById(id + "-drop");
+            dropzoneElement.classList.remove('above')
+        },
     })
-        .on('dropactivate', function (event) {
-            event.target.classList.add('drop-activated')
-        })
+
 
     interact("#" + id).on('tap', function (event) {
-        event.currentTarget.style.color = 'red'
+        // event.currentTarget.style.color = 'red'
         event.preventDefault()
     })
 }

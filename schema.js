@@ -44,19 +44,40 @@ export default class Schema {
 
   evictChild(childId) {
     const parent = this.elements.get(childId).parent
-    if(parent == null) {
-       return;
+    if (parent == null) {
+      return;
     }
     parent.evictChild(childId);
     this.elements.get(childId).setParent(null);
   }
 
   setItemOnView(id) {
-    let e = document.createElement("div");
-    e.className = `bg-blue-300 bg-opacity-50 absolute z-0 w-16 h-16 border-b-[1px] border-r-[1px] border-black`;
-    e.innerHTML = "test"
-    e.id = id;
-    document.getElementById("schemaContainer").appendChild(e)
+    let mainElement = document.createElement("div");
+    mainElement.className = `element`;
+    mainElement.id = id;
+
+    let inputDiv = document.createElement("div");
+    inputDiv.className = `flex gap-2 px-2`;
+
+    let inputName = document.createElement("input");
+    inputName.value = id
+    inputName.type = "text"
+    inputName.className = `element input`
+
+    let inputArrray = document.createElement("input");
+    inputArrray.type = "checkbox"
+
+    inputDiv.appendChild(inputName);
+    inputDiv.appendChild(inputArrray);
+
+    let drop = document.createElement("div");
+    drop.className = `element drop`;
+    drop.id = id+"-drop";
+
+    mainElement.appendChild(inputDiv);
+    mainElement.appendChild(drop);
+
+    document.getElementById("schemaContainer").appendChild(mainElement)
   }
 
   relationExistsAlready(parentId, childId) {

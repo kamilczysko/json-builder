@@ -134,14 +134,14 @@ export default class Schema {
     const valueInput = document.createElement("input");
     valueInput.type = "text";
     valueInput.value = value;
-    valueInput.onchange = () => {
+    valueInput.oninput = () => {
       element.addAttribute(keyInput.value, valueInput.value);
       this.updateJSON();
     }
     const removeButton = document.createElement("button");
     removeButton.innerText = "remove";
     removeButton.onclick = () => {
-      element.removeAttribute(key);
+      element.removeAttribute(keyInput.value);
       document.getElementById("attributes").removeChild(attribute);
       this.updateJSON();
     }
@@ -162,7 +162,7 @@ export default class Schema {
     const valueInput = document.createElement("input");
     valueInput.type = "text";
     valueInput.value = value;
-    valueInput.onchange = () => {
+    valueInput.oninput = () => {
       element.changeOnList(valueInput.value, index);
       this.updateJSON();
     }

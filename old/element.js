@@ -248,7 +248,7 @@ export default class Element {
 
     let inputArrray = document.createElement("input");
     inputArrray.type = "checkbox"
-    inputArrray.onchange = () => {
+    inputArrray.oninput = () => {
       this.isArray = inputArrray.checked;
       this.updateJSON();
     }

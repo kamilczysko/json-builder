@@ -86,3 +86,8 @@ button:hover {
 #addAttribute {
     display: none;
 }
+
+.jsonContainer {
+    overflow: scroll;
+    resize: none;
+}

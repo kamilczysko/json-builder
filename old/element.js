@@ -2,7 +2,7 @@ import "interact"
 import * as InteractiveSettings from "interactivesettings"
 
 export default class Element {
-  constructor(id, position, children, parent, isArray, setRelation, updateJSON) {
+  constructor(id, position, children, parent, isArray, setRelation, updateJSON, updateElementData) {
     this.id = id
     this.name = id;
     this.isArray = isArray;
@@ -14,6 +14,7 @@ export default class Element {
     this.attributes = new Map();
     this.list = []
     this.updateJSON = updateJSON;
+    this.updateElementData = updateElementData;
     if (children) {
       this.children = children
       child.setParent(this);
@@ -251,6 +252,7 @@ export default class Element {
     inputArrray.oninput = () => {
       this.isArray = inputArrray.checked;
       this.updateJSON();
+      this.updateElementData();
     }
     let label = document.createElement("span");
     label.style.fontWeight = "100"

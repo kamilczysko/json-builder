@@ -32,7 +32,7 @@ export default class Schema {
 
   addElement(position, parent, children, isArray) {
     const newId = "element-" + this.actualId;
-    const element = new Element(newId, position, parent, children, isArray, (parentId, childId) => { this.setRelation(parentId, childId) }, () => {this.updateJSON()});
+    const element = new Element(newId, position, parent, children, isArray, (parentId, childId) => this.setRelation(parentId, childId), () => this.updateJSON(), () => this.updateElementTypeData());
     this.elements.set(newId, element);
     element.onClick(() => this.selectElement(newId))
     this.actualId++;
@@ -87,22 +87,29 @@ export default class Schema {
         element.select(true);
         document.getElementById("addAttribute").style.display = "block"
         document.getElementById("attributes").innerHTML = null;
-        if (element.isArray) {
-          this.setListOnView(id);
-          document.getElementById("addAttribute").onclick = () => {
-            element.addToList("")
-            this.addListToView(element, "", element.getList().length-1);
-            this.updateJSON();
-          };
-        } else {
-          this.setAttributesOnView(id);
-          document.getElementById("addAttribute").onclick = () => {
-            this.addAttributesToView(element, "", "");
-            this.updateJSON();
-          };
-        }
+        this.updateElementTypeData()
       }
     })
+  }
+
+  updateElementTypeData() {
+    const actualElement = this.elements.get(this.selectedElementId);
+    document.getElementById("attributes").innerHTML = null;
+    if (actualElement.isArray) {
+      this.setListOnView(this.selectedElementId);
+      document.getElementById("addAttribute").onclick = () => {
+        actualElement.addToList("")
+        this.addListToView(actualElement, "", actualElement.getList().length-1);
+        this.updateJSON();
+      };
+    } else {
+      this.setAttributesOnView(this.selectedElementId);
+      document.getElementById("addAttribute").onclick = () => {
+        this.addAttributesToView(actualElement, "", "");
+        this.updateJSON();
+      };
+    }
+
   }
 
   setListOnView(elementId) {

@@ -3,7 +3,7 @@ import Schema from "schema"
 const schema = new Schema();
 
 function add() {
-    schema.addElement("test", null, null, false);
+    schema.addElement({x:0, y:0}, null, null, false);
 }
 
 document.getElementById("addButton").onclick = () => {
@@ -21,4 +21,13 @@ document.getElementById("generate").onclick = () => {
     } else {
         document.getElementById("textarea").value = "{}";
     }
+}
+
+document.getElementById("schemaContainer").ondblclick = (event) => {
+    const position = {
+        x: event.offsetX,
+        y: event.offsetY
+    }
+    schema.addElement(position, null, null, false);
+
 }

@@ -30,12 +30,13 @@ export default class Schema {
     })
   }
 
-  addElement(name, parent, children, isArray) {
+  addElement(position, parent, children, isArray) {
     const newId = "element-" + this.actualId;
-    const element = new Element(newId, name, parent, children, isArray, (parentId, childId) => { this.setRelation(parentId, childId) });
+    const element = new Element(newId, position, parent, children, isArray, (parentId, childId) => { this.setRelation(parentId, childId) }, () => {this.updateJSON()});
     this.elements.set(newId, element);
     element.onClick(() => this.selectElement(newId))
     this.actualId++;
+    this.updateJSON();
   }
 
   deleteSelectedElement() {
@@ -54,7 +55,6 @@ export default class Schema {
     this.removeFromPreviousParent(childId);
     this.elements.get(parentId).addChild(this.elements.get(childId))
     this.elements.get(childId).setParent(this.elements.get(parentId))
-    console.log(this.elements.get(parentId))
   }
 
   removeFromPreviousParent(childId) {
@@ -92,11 +92,13 @@ export default class Schema {
           document.getElementById("addAttribute").onclick = () => {
             element.addToList("")
             this.addListToView(element, "", element.getList().length-1);
+            this.updateJSON();
           };
         } else {
           this.setAttributesOnView(id);
           document.getElementById("addAttribute").onclick = () => {
             this.addAttributesToView(element, "", "");
+            this.updateJSON();
           };
         }
       }
@@ -133,13 +135,15 @@ export default class Schema {
     valueInput.type = "text";
     valueInput.value = value;
     valueInput.onchange = () => {
-      element.addAttribute(keyInput.value, valueInput.value)
+      element.addAttribute(keyInput.value, valueInput.value);
+      this.updateJSON();
     }
     const removeButton = document.createElement("button");
     removeButton.innerText = "remove";
     removeButton.onclick = () => {
       element.removeAttribute(key);
       document.getElementById("attributes").removeChild(attribute);
+      this.updateJSON();
     }
 
     attribute.appendChild(keyLabel);
@@ -160,6 +164,7 @@ export default class Schema {
     valueInput.value = value;
     valueInput.onchange = () => {
       element.changeOnList(valueInput.value, index);
+      this.updateJSON();
     }
     const removeButton = document.createElement("button");
     removeButton.innerText = "remove";
@@ -167,6 +172,7 @@ export default class Schema {
       element.removeFromList(valueInput.value);
       document.getElementById("attributes").removeChild(attribute);
       this.reloadList();
+      this.updateJSON();
     }
 
     attribute.appendChild(valueLabel);
@@ -178,5 +184,9 @@ export default class Schema {
   reloadList() {
     document.getElementById("attributes").innerHTML = null;
     this.setListOnView(this.selectedElementId);
+  }
+
+  updateJSON() {
+    document.getElementById("textarea").value = JSON.stringify(JSON.parse("{" + this.getMainElement().getJSON() + "}"), null, 5);
   }
 }

@@ -1,11 +1,12 @@
 .element {
     background-color: rgba(169, 169, 255, .4);
     cursor: pointer;
-    width: 30%;
+    width: 40%;
     display: grid;
-    grid-template-rows: 20px 2fr;
+    grid-template-rows: 1fr 5fr;
+    position: absolute;
 }
-.element input {
+.elementInput input {
     width: 100%;
     border-style: none;
     background: none;
@@ -17,13 +18,15 @@
 
 .elementInput {
     display: flex;
-    justify-content:space-between;
+    justify-content:space-around;
+    /* align-items: center; */
     z-index: 100;
     padding-left: 2px;
     padding-right: 2px;
     padding-top: 1px;
     padding-bottom: 1px;
     background-color: red;
+    width: 100%;
 }
 
 .element .drop {

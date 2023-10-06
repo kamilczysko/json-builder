@@ -16,6 +16,7 @@ export default class CustomElement {
       listeners: {
         start(event) {
           event.target.style.zIndex = 100
+          
         },
         move(event) {
 
@@ -26,11 +27,12 @@ export default class CustomElement {
           position.x += event.dx;
           position.y += event.dy;
 
+          console.log(position.x);
+
           event.target.style.transform =
             `translate(${position.x}px, ${position.y}px)`;
         },
         end(event) {
-          event.target.style.zIndex = 0
         }
       },
       modifiers: [

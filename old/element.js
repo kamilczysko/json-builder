@@ -2,20 +2,18 @@ import "interact"
 import * as InteractiveSettings from "interactivesettings"
 
 export default class Element {
-  constructor(id, name, children, parent, isArray, setRelation) {
+  constructor(id, position, children, parent, isArray, setRelation, updateJSON) {
     this.id = id
     this.name = id;
     this.isArray = isArray;
     this.children = [];
     this.parent = null;
     this.isSelected = false;
-    this.position = {
-      x: 0,
-      y: 0
-    };
+    this.position = position;
     this.layer = 0
     this.attributes = new Map();
     this.list = []
+    this.updateJSON = updateJSON;
     if (children) {
       this.children = children
       child.setParent(this);
@@ -55,7 +53,7 @@ export default class Element {
   }
 
   removeFromList(item) {
-    console.log("remove: "+ item)
+    console.log("remove: " + item)
     this.list = this.list.filter(i => i != item)
   }
 
@@ -169,8 +167,9 @@ export default class Element {
   }
 
   addChild(child) {
-    child.setLayer(this.layer + 1)
-    this.children.push(child)
+    child.setLayer(this.layer + 1);
+    this.children.push(child);
+    this.updateJSON();
   }
 
   getName() {
@@ -184,12 +183,13 @@ export default class Element {
     } else {
       this.setLayer(parent.getLayer() + 1);
     }
-
+    this.updateJSON();
   }
 
   evictChild(child) {
     const indexToRemove = this.children.findIndex(id => id == child);
     this.children.splice(indexToRemove, 1);
+    this.updateJSON();
   }
 
   delete() {
@@ -201,6 +201,7 @@ export default class Element {
     })
     const self = document.getElementById(this.id);
     document.getElementById("schemaContainer").removeChild(self);
+    this.updateJSON();
   }
 
   move(moveX, moveY) {
@@ -220,6 +221,9 @@ export default class Element {
     let mainElement = document.createElement("div");
     mainElement.className = `element`;
     mainElement.id = id;
+    mainElement.style.position = "absolute";
+    mainElement.style.transform =
+      `translate(${this.position.x}px, ${this.position.y}px)`;
 
     let inputDiv = document.createElement("div");
     inputDiv.className = `elementInput`;
@@ -227,20 +231,33 @@ export default class Element {
     let inputName = document.createElement("input");
     inputName.value = id
     inputName.type = "text"
-    inputName.className = `element input`
-    inputName.oninput = () => { this.setName(inputName.value) }
+    inputName.className = `elementInput input`
+    inputName.oninput = () => {
+      this.setName(inputName.value);
+      this.updateJSON();
+    }
+    inputName.ondblclick = () => {
+      event.stopPropagation();
+    }
 
     let arrayInputControl = document.createElement("div");
+    arrayInputControl.style.display = "flex"
+    arrayInputControl.style.flexDirection = "column"
+    arrayInputControl.style.gap = "0";
+    arrayInputControl.style.width = "50px";
+
     let inputArrray = document.createElement("input");
     inputArrray.type = "checkbox"
     inputArrray.onchange = () => {
       this.isArray = inputArrray.checked;
+      this.updateJSON();
     }
-    let label = document.createElement("p");
+    let label = document.createElement("span");
     label.style.fontWeight = "100"
-    label.innerHTML = "array"
+    label.style.fontSize = "10px"
+    label.innerHTML = "is array"
     arrayInputControl.appendChild(inputArrray);
-    // arrayInputControl.appendChild(label);
+    arrayInputControl.appendChild(label);
 
     inputDiv.appendChild(inputName);
     inputDiv.appendChild(arrayInputControl);
@@ -254,7 +271,6 @@ export default class Element {
 
     document.getElementById("schemaContainer").appendChild(mainElement)
   }
-
 
   onClick(action) {
     document.getElementById(this.id).onmousedown = () => action()

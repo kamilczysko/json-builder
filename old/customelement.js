@@ -19,14 +19,6 @@ export default class CustomElement {
         },
         move(event) {
 
-          // children.forEach((child) => {
-          //   const childItem = document.getElementById(child);
-          //   const newX = childItem.offsetLeft + event.dx;
-          //   const newY = childItem.offsetTop + event.dy;
-          //   childItem.style.top = `${newY}px`;
-          //   childItem.style.left = `${newX}px`;
-          // });
-
           children.forEach((child) => {
             child.move(event.dx, event.dy);
           });
@@ -88,7 +80,7 @@ export default class CustomElement {
           x = (parseFloat(x) || 0) + event.deltaRect.left
           y = (parseFloat(y) || 0) + event.deltaRect.top
 
-          if (event.rect.width < 50 || event.rect.height < 50) {
+          if (event.rect.width < 100 || event.rect.height < 100) {
             return
           }
 

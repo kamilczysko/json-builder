@@ -12,5 +12,5 @@ document.getElementById("addButton").onclick = () => {
 
 
 document.getElementById("generate").onclick = () => {
-    console.log("{"+schema.getMainElement().getJSON()+"}");
+    document.getElementById("textarea").value = JSON.stringify(JSON.parse("{"+schema.getMainElement().getJSON()+"}"),null,2);  
 }

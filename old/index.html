@@ -50,12 +50,24 @@
       <div class="mt-2 bg-gray-100 w-full h-[90%] relative" id="schemaContainer">
 
       </div>
-      <button id="generate">generate</button>
+
     </div>
 
     </div>
     <div class="w-full h-[99vh] overflow-hidden">
-
+      <textarea name="" id="textarea" cols="30" rows="10"></textarea>
+      <div class="panel">
+        <p>Add attributes</p>
+        <div class="attribute">
+          <span>key: </span>
+          <input type="text">
+          <span>value: </span>
+          <input type="text">
+          <button>remove</button>
+        </div>
+        <button>add</button>
+        <button id="generate">generate</button>
+      </div>
     </div>
   </main>
 

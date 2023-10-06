@@ -23,9 +23,9 @@ export default class Schema {
 
   addElement(name, parent, children, isArray) {
     const newId = "element-" + this.actualId;
-    this.setItemOnView(newId);
-
-    this.elements.set(newId, new Element(newId, name, parent, children, isArray, (parentId, childId) => { this.setRelation(parentId, childId) }));
+    const element = new Element(newId, name, parent, children, isArray, (parentId, childId) => { this.setRelation(parentId, childId) });
+    this.elements.set(newId, element);
+    element.onClick(() => this.selectElement(newId))
     this.actualId++;
   }
 
@@ -55,37 +55,18 @@ export default class Schema {
     this.elements.get(childId).setParent(null);
   }
 
-  setItemOnView(id) {
-    let mainElement = document.createElement("div");
-    mainElement.className = `element`;
-    mainElement.id = id;
-
-    let inputDiv = document.createElement("div");
-    inputDiv.className = `flex gap-2 px-2`;
-
-    let inputName = document.createElement("input");
-    inputName.value = id
-    inputName.type = "text"
-    inputName.className = `element input`
-
-    let inputArrray = document.createElement("input");
-    inputArrray.type = "checkbox"
-
-    inputDiv.appendChild(inputName);
-    inputDiv.appendChild(inputArrray);
-
-    let drop = document.createElement("div");
-    drop.className = `element drop`;
-    drop.id = id+"-drop";
-
-    mainElement.appendChild(inputDiv);
-    mainElement.appendChild(drop);
-
-    document.getElementById("schemaContainer").appendChild(mainElement)
-  }
-
   relationExistsAlready(parentId, childId) {
     const childWithId = this.elements.get(parentId).children.filter(element => element.id == childId).length
     return childWithId > 0
+  }
+
+  selectElement(id) {
+    this.elements.forEach((val, key) => {
+      val.select(false);
+      if (key == id) {
+        val.select(true);
+      }
+    })
+
   }
 }

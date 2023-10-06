@@ -14,6 +14,10 @@ export default class Schema {
     return this.elements.get("element-0");
   }
 
+  hasElements() {
+    return this.elements.size > 0
+  }
+
   setMainContainer(evictChild) {
     interact("#schemaContainer").dropzone({
       ondrop: (event) => {
@@ -26,8 +30,18 @@ export default class Schema {
     const newId = "element-" + this.actualId;
     const element = new Element(newId, name, parent, children, isArray, (parentId, childId) => { this.setRelation(parentId, childId) });
     this.elements.set(newId, element);
+    console.log(element)
     element.onClick(() => this.selectElement(newId))
     this.actualId++;
+  }
+
+  deleteSelectedElement() {
+    if(this.selectedElementId == null) {
+      return;
+    }
+    this.elements.get(this.selectedElementId).delete();
+    this.elements.delete(this.selectedElementId);
+    this.selectedElementId = null;
   }
 
   setRelation(parentId, childId) {

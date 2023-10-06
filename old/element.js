@@ -124,9 +124,17 @@ getAttributesJSON() {
   }
   let result = "";
   this.attributes.forEach((val, key) => {
-    result += "\t\"" + key + "\": " + "\"" + val + "\","
+    if(this.isNumeric(val)) {
+      result += "\t\"" + key + "\": " + "" + val + ","
+    } else {
+      result += "\t\"" + key + "\": " + "\"" + val + "\","
+    }
   })
   return result.slice(0, -1);
+}
+
+isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 getChildrenJSON() {
@@ -162,6 +170,17 @@ setParent(parent) {
 evictChild(child) {
   const indexToRemove = this.children.findIndex(id => id == child);
   this.children.splice(indexToRemove, 1);
+}
+
+delete() {
+  if(this.parent) {
+    this.parent.evictChild(this.id);
+  }
+  this.children.forEach(child => {
+    child.delete();
+  })
+  const self = document.getElementById(this.id);
+  document.getElementById("schemaContainer").removeChild(self);
 }
 
 move(moveX, moveY) {

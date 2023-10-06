@@ -68,13 +68,52 @@ export default class Schema {
       if (key == id) {
         this.selectedElementId = id;
         element.select(true);
+        document.getElementById("addAttribute").style.display = "block"
+        document.getElementById("attributes").innerHTML = null;
+        this.setAttributesOnView(id);
+        document.getElementById("addAttribute").onclick = () => {
+          this.addAttributeToView(element, "", "");
+        };
       }
     })
   }
 
-  setAttributes(elementId) {
+  setAttributesOnView(elementId) {
     const element = this.elements.get(elementId);
-    
-    element.getA
+    const attributes = element.getAttributes();
+    attributes.forEach((value, key) => {
+      this.addAttributeToView(element, key, value);
+    })
   }
+
+  addAttributeToView(element, key, value) {
+    const attribute = document.createElement("div");
+    attribute.classList.add("attribute");
+    const keyLabel = document.createElement("span");
+    keyLabel.innerText = "key: ";
+    const valueLabel = document.createElement("span");
+    valueLabel.innerText = "value: ";
+    const keyInput = document.createElement("input");
+    keyInput.value = key;
+    keyInput.type = "text";
+    const valueInput = document.createElement("input");
+    valueInput.type = "text";
+    valueInput.value = value;
+    valueInput.onchange = () => {
+      element.addAttribute(keyInput.value, valueInput.value)
+    }
+    const removeButton = document.createElement("button");
+    removeButton.innerText = "remove";
+    removeButton.onclick = () => {
+        element.removeAttribute(key);
+        document.getElementById("attributes").removeChild(attribute);
+    }
+
+    attribute.appendChild(keyLabel);
+    attribute.appendChild(keyInput);
+    attribute.appendChild(valueLabel);
+    attribute.appendChild(valueInput);
+    attribute.appendChild(removeButton);
+    document.getElementById("attributes").appendChild(attribute);
+}
 }

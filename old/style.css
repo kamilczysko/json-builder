@@ -79,3 +79,7 @@ button:hover {
     align-items: center;
     width: 100%;
 }
+
+#addAttribute {
+    display: none;
+}

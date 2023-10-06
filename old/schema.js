@@ -18,6 +18,10 @@ export default class Schema {
     return this.elements.size > 0
   }
 
+  getSelectedElement() {
+    return this.elements.get(this.selectedElementId);
+  }
+
   setMainContainer(evictChild) {
     interact("#schemaContainer").dropzone({
       ondrop: (event) => {
@@ -30,13 +34,12 @@ export default class Schema {
     const newId = "element-" + this.actualId;
     const element = new Element(newId, name, parent, children, isArray, (parentId, childId) => { this.setRelation(parentId, childId) });
     this.elements.set(newId, element);
-    console.log(element)
     element.onClick(() => this.selectElement(newId))
     this.actualId++;
   }
 
   deleteSelectedElement() {
-    if(this.selectedElementId == null) {
+    if (this.selectedElementId == null) {
       return;
     }
     this.elements.get(this.selectedElementId).delete();
@@ -84,11 +87,27 @@ export default class Schema {
         element.select(true);
         document.getElementById("addAttribute").style.display = "block"
         document.getElementById("attributes").innerHTML = null;
-        this.setAttributesOnView(id);
-        document.getElementById("addAttribute").onclick = () => {
-          this.addAttributeToView(element, "", "");
-        };
+        if (element.isArray) {
+          this.setListOnView(id);
+          document.getElementById("addAttribute").onclick = () => {
+            element.addToList("")
+            this.addListToView(element, "", element.getList().length-1);
+          };
+        } else {
+          this.setAttributesOnView(id);
+          document.getElementById("addAttribute").onclick = () => {
+            this.addAttributesToView(element, "", "");
+          };
+        }
       }
+    })
+  }
+
+  setListOnView(elementId) {
+    const element = this.elements.get(elementId);
+    const attributes = element.getList();
+    attributes.forEach((value, index) => {
+      this.addListToView(element, value, index);
     })
   }
 
@@ -96,11 +115,11 @@ export default class Schema {
     const element = this.elements.get(elementId);
     const attributes = element.getAttributes();
     attributes.forEach((value, key) => {
-      this.addAttributeToView(element, key, value);
+      this.addAttributesToView(element, key, value);
     })
   }
 
-  addAttributeToView(element, key, value) {
+  addAttributesToView(element, key, value) {
     const attribute = document.createElement("div");
     attribute.classList.add("attribute");
     const keyLabel = document.createElement("span");
@@ -119,8 +138,8 @@ export default class Schema {
     const removeButton = document.createElement("button");
     removeButton.innerText = "remove";
     removeButton.onclick = () => {
-        element.removeAttribute(key);
-        document.getElementById("attributes").removeChild(attribute);
+      element.removeAttribute(key);
+      document.getElementById("attributes").removeChild(attribute);
     }
 
     attribute.appendChild(keyLabel);
@@ -129,5 +148,35 @@ export default class Schema {
     attribute.appendChild(valueInput);
     attribute.appendChild(removeButton);
     document.getElementById("attributes").appendChild(attribute);
-}
+  }
+
+  addListToView(element, value, index) {
+    const attribute = document.createElement("div");
+    attribute.classList.add("attribute");
+    const valueLabel = document.createElement("span");
+    valueLabel.innerText = "value: ";
+    const valueInput = document.createElement("input");
+    valueInput.type = "text";
+    valueInput.value = value;
+    valueInput.onchange = () => {
+      element.changeOnList(valueInput.value, index);
+    }
+    const removeButton = document.createElement("button");
+    removeButton.innerText = "remove";
+    removeButton.onclick = () => {
+      element.removeFromList(valueInput.value);
+      document.getElementById("attributes").removeChild(attribute);
+      this.reloadList();
+    }
+
+    attribute.appendChild(valueLabel);
+    attribute.appendChild(valueInput);
+    attribute.appendChild(removeButton);
+    document.getElementById("attributes").appendChild(attribute);
+  }
+
+  reloadList() {
+    document.getElementById("attributes").innerHTML = null;
+    this.setListOnView(this.selectedElementId);
+  }
 }

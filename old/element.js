@@ -26,7 +26,7 @@ export default class Element {
       parent.addChild(this);
 
     }
-    this.setItemOnView(id);
+    this.setElementOnView(id);
     InteractiveSettings.setDraggable(id, this.position, this.children);
     InteractiveSettings.setResizable(id);
     InteractiveSettings.setDropzone(id, setRelation);
@@ -44,6 +44,23 @@ export default class Element {
 
   addToList(value) {
     this.list.push(value)
+  }
+
+  isArray() {
+    return this.isArray;
+  }
+
+  getList() {
+    return this.list;
+  }
+
+  removeFromList(item) {
+    console.log("remove: "+ item)
+    this.list = this.list.filter(i => i != item)
+  }
+
+  changeOnList(newVal, index) {
+    this.list[index] = newVal;
   }
 
   setLayer(layer) {
@@ -76,21 +93,24 @@ export default class Element {
 
   getJSON() {
     if (this.isArray) {
-      if (this.children.length > 0) {
-        console.log(this.children.map(c => c.getJSONAsArrayItem()).toString())
-        return "\"" + this.name + "\":[" + this.children.map(c => c.getJSONAsArrayItem()).toString() + "]"
-      }
-      return "\"" + this.name + "\": [" + this.list + "]"
+      let result = "";
+      this.list.forEach(value => {
+        if (this.isNumeric(value)) {
+          result += value + ",";
+        } else {
+          result += "\"" + value + "\",";
+        }
+      })
+      return "\"" + this.name + "\":[" + result.slice(0, -1) + "]";
     }
     if (this.getAttributesJSON() == null && this.getChildrenJSON() == null) {
-      // return null;
       return "\"" + this.name + "\": null";
     }
     let attrs = this.getAttributesJSON() != null ? this.getAttributesJSON() : null
     let childs = this.getChildrenJSON() != null ? this.getChildrenJSON() : null
     if (attrs && childs) {
       return '"' + this.name + "\": {" +
-        attrs + ","+
+        attrs + "," +
         childs +
         "}";
     } else if (attrs) {
@@ -105,138 +125,139 @@ export default class Element {
     }
   }
 
-getJSONAsArrayItem() {
-  if (this.getAttributesJSON() == null && this.getChildrenJSON() == null) {
-    return "null";
-  }
-  let attrs = this.getAttributesJSON() != null ? this.getAttributesJSON() : ""
-  let childs = this.getChildrenJSON() != null ? ", " + this.getChildrenJSON() : ""
-  console.log("childs:" + childs)
-  return "{" +
-    attrs +
-    childs +
-    "}";
-}
-
-getAttributesJSON() {
-  if (this.attributes.size == 0) {
-    return null;
-  }
-  let result = "";
-  this.attributes.forEach((val, key) => {
-    if(this.isNumeric(val)) {
-      result += "\t\"" + key + "\": " + "" + val + ","
-    } else {
-      result += "\t\"" + key + "\": " + "\"" + val + "\","
+  getJSONAsArrayItem() {
+    if (this.getAttributesJSON() == null && this.getChildrenJSON() == null) {
+      return "null";
     }
-  })
-  return result.slice(0, -1);
-}
-
-isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
-getChildrenJSON() {
-  if (this.children.length == 0) {
-    return null;
-  }
-  let res = "";
-  this.children.forEach(child => {
-    res += child.getJSON() + ",";
-  })
-  return res.slice(0, -1);
-}
-
-addChild(child) {
-  child.setLayer(this.layer + 1)
-  this.children.push(child)
-}
-
-getName() {
-  return this.name;
-}
-
-setParent(parent) {
-  this.parent = parent;
-  if (parent == null) {
-    this.setLayer(0);
-  } else {
-    this.setLayer(parent.getLayer() + 1);
+    let attrs = this.getAttributesJSON() != null ? this.getAttributesJSON() : ""
+    let childs = this.getChildrenJSON() != null ? ", " + this.getChildrenJSON() : ""
+    console.log("childs:" + childs)
+    return "{" +
+      attrs +
+      childs +
+      "}";
   }
 
-}
-
-evictChild(child) {
-  const indexToRemove = this.children.findIndex(id => id == child);
-  this.children.splice(indexToRemove, 1);
-}
-
-delete() {
-  if(this.parent) {
-    this.parent.evictChild(this.id);
+  getAttributesJSON() {
+    if (this.attributes.size == 0) {
+      return null;
+    }
+    let result = "";
+    this.attributes.forEach((val, key) => {
+      if (this.isNumeric(val)) {
+        result += "\t\"" + key + "\": " + "" + val + ","
+      } else {
+        result += "\t\"" + key + "\": " + "\"" + val + "\","
+      }
+    })
+    return result.slice(0, -1);
   }
-  this.children.forEach(child => {
-    child.delete();
-  })
-  const self = document.getElementById(this.id);
-  document.getElementById("schemaContainer").removeChild(self);
-}
 
-move(moveX, moveY) {
-  this.position.x += moveX;
-  this.position.y += moveY;
-
-  document.getElementById(this.id).style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
-  if (this.children.length == 0 || this.children == null) {
-    return;
+  isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
   }
-  this.children.forEach((child) => {
-    child.move(moveX, moveY);
-  });
-}
 
-setItemOnView(id) {
-  let mainElement = document.createElement("div");
-  mainElement.className = `element`;
-  mainElement.id = id;
-
-  let inputDiv = document.createElement("div");
-  inputDiv.className = `elementInput`;
-
-  let inputName = document.createElement("input");
-  inputName.value = id
-  inputName.type = "text"
-  inputName.className = `element input`
-  inputName.oninput = () => { this.setName(inputName.value) }
-
-  let arrayInputControl = document.createElement("div");
-  let inputArrray = document.createElement("input");
-  inputArrray.type = "checkbox"
-  inputArrray.onchange = () => {
-    this.isArray = inputArrray.checked;
+  getChildrenJSON() {
+    if (this.children.length == 0) {
+      return null;
+    }
+    let res = "";
+    this.children.forEach(child => {
+      res += child.getJSON() + ",";
+    })
+    return res.slice(0, -1);
   }
-  let label = document.createElement("p");
-  label.style.fontWeight = "100"
-  label.innerHTML = "array"
-  arrayInputControl.appendChild(inputArrray);
-  // arrayInputControl.appendChild(label);
 
-  inputDiv.appendChild(inputName);
-  inputDiv.appendChild(arrayInputControl);
+  addChild(child) {
+    child.setLayer(this.layer + 1)
+    this.children.push(child)
+  }
 
-  let drop = document.createElement("div");
-  drop.className = `element drop`;
-  drop.id = id + "-drop";
+  getName() {
+    return this.name;
+  }
 
-  mainElement.appendChild(inputDiv);
-  mainElement.appendChild(drop);
+  setParent(parent) {
+    this.parent = parent;
+    if (parent == null) {
+      this.setLayer(0);
+    } else {
+      this.setLayer(parent.getLayer() + 1);
+    }
 
-  document.getElementById("schemaContainer").appendChild(mainElement)
-}
+  }
 
-onClick(action) {
-  document.getElementById(this.id).onmousedown = () => action()
-}
+  evictChild(child) {
+    const indexToRemove = this.children.findIndex(id => id == child);
+    this.children.splice(indexToRemove, 1);
+  }
+
+  delete() {
+    if (this.parent) {
+      this.parent.evictChild(this.id);
+    }
+    this.children.forEach(child => {
+      child.delete();
+    })
+    const self = document.getElementById(this.id);
+    document.getElementById("schemaContainer").removeChild(self);
+  }
+
+  move(moveX, moveY) {
+    this.position.x += moveX;
+    this.position.y += moveY;
+
+    document.getElementById(this.id).style.transform = `translate(${this.position.x}px, ${this.position.y}px)`;
+    if (this.children.length == 0 || this.children == null) {
+      return;
+    }
+    this.children.forEach((child) => {
+      child.move(moveX, moveY);
+    });
+  }
+
+  setElementOnView(id) {
+    let mainElement = document.createElement("div");
+    mainElement.className = `element`;
+    mainElement.id = id;
+
+    let inputDiv = document.createElement("div");
+    inputDiv.className = `elementInput`;
+
+    let inputName = document.createElement("input");
+    inputName.value = id
+    inputName.type = "text"
+    inputName.className = `element input`
+    inputName.oninput = () => { this.setName(inputName.value) }
+
+    let arrayInputControl = document.createElement("div");
+    let inputArrray = document.createElement("input");
+    inputArrray.type = "checkbox"
+    inputArrray.onchange = () => {
+      this.isArray = inputArrray.checked;
+    }
+    let label = document.createElement("p");
+    label.style.fontWeight = "100"
+    label.innerHTML = "array"
+    arrayInputControl.appendChild(inputArrray);
+    // arrayInputControl.appendChild(label);
+
+    inputDiv.appendChild(inputName);
+    inputDiv.appendChild(arrayInputControl);
+
+    let drop = document.createElement("div");
+    drop.className = `element drop`;
+    drop.id = id + "-drop";
+
+    mainElement.appendChild(inputDiv);
+    mainElement.appendChild(drop);
+
+    document.getElementById("schemaContainer").appendChild(mainElement)
+  }
+
+
+  onClick(action) {
+    document.getElementById(this.id).onmousedown = () => action()
+  }
 
 }

@@ -15,6 +15,7 @@ document.getElementById("removeButton").onclick = () => {
 }
 
 document.getElementById("generate").onclick = () => {
+    console.log(schema.getMainElement().getJSON())
     if (schema.hasElements()) {
         document.getElementById("textarea").value = JSON.stringify(JSON.parse("{" + schema.getMainElement().getJSON() + "}"), null, 5);
     } else {

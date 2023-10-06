@@ -4,6 +4,7 @@ import "interact"
 export default class Schema {
   constructor() {
     this.elements = new Map();
+    this.selectedElementId = null;
     this.actualId = 0;
 
     this.setMainContainer((childId) => this.evictChild(childId));
@@ -61,12 +62,19 @@ export default class Schema {
   }
 
   selectElement(id) {
-    this.elements.forEach((val, key) => {
-      val.select(false);
+    this.selectedElementId = null;
+    this.elements.forEach((element, key) => {
+      element.select(false);
       if (key == id) {
-        val.select(true);
+        this.selectedElementId = id;
+        element.select(true);
       }
     })
+  }
 
+  setAttributes(elementId) {
+    const element = this.elements.get(elementId);
+    
+    element.getA
   }
 }

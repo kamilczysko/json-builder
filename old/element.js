@@ -62,6 +62,10 @@ export default class Element {
     this.attributes.set(key, value);
   }
 
+  getAttributes() {
+    return this.attributes;
+  }
+
   getLayer() {
     return this.layer;
   }
@@ -99,7 +103,6 @@ export default class Element {
   }
 
   getAttributesJSON() {
-    console.log(this.attributes.size)
     if(this.attributes.size == 0) {
       return null;
     }

@@ -41,8 +41,11 @@
 }
 
 .panel {
-    position: sticky;
+    position: absolute;
     bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .attribute {
@@ -53,4 +56,26 @@
 .attribute input {
     background: none;
     border-bottom: 1px solid black;
+    outline: none;
+
+}
+
+button {
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 3px;
+}
+
+button:hover {
+    position:relative;
+    border: 2px solid black;
+    font-weight: bold;
+}
+
+.rightSide {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    width: 100%;
 }

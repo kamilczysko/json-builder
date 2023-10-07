@@ -5,17 +5,16 @@ export function setDraggable(id, position, children) {
                 event.target.style.zIndex = 10000000
             },
             move(event) {
-                children.forEach((child) => {
-                    child.move(event.dx, event.dy);
-                });
-
                 position.x += event.dx;
                 position.y += event.dy;
 
                 event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
+
+                children.forEach((child) => {
+                    child.move(event.dx, event.dy);
+                });
             },
             end(event) {
-                event.target.style.zIndex = 0
             }
         },
         modifiers: [

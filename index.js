@@ -22,3 +22,7 @@ document.getElementById("schemaContainer").ondblclick = (event) => {
     schema.addElement(position, null, null, false);
 
 }
+
+document.getElementById("textarea").oninput = () => {
+    schema.createSchemaFromJSON(document.getElementById("textarea").value);
+}

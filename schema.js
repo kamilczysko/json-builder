@@ -10,8 +10,21 @@ export default class Schema {
     this.setMainContainer((childId) => this.evictChild(childId));
   }
 
+  createSchemaFromJSON(text) {
+    try{
+      const json = JSON.parse(text);
+      const map = new Map(Object.entries(json));
+      map.forEach((val, key) => {
+        console.log(key + "_"+val)
+      })
+      document.getElementById("textarea").value = JSON.stringify(json, null, 5)
+    } catch {
+
+    }
+  }
+
   getMainElement() {
-    return this.elements.get("element-0");
+    return this.elements.get("element-0"); //todo change
   }
 
   hasElements() {

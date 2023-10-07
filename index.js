@@ -11,7 +11,8 @@ document.getElementById("addButton").onclick = () => {
 }
 
 document.getElementById("removeButton").onclick = () => {
-    schema.deleteSelectedElement();
+    // schema.deleteSelectedElement();
+    console.log(schema.getElements())
 }
 
 document.getElementById("schemaContainer").ondblclick = (event) => {

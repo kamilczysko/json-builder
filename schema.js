@@ -43,6 +43,10 @@ export default class Schema {
     })
   }
 
+  getElements() {
+    return this.elements;
+  }
+
   addElement(position, parent, children, isArray) {
     const newId = "element-" + this.actualId;
     const element = new Element(newId, position, parent, children, isArray, (parentId, childId) => this.setRelation(parentId, childId), () => this.updateJSON(), () => this.updateElementTypeData());
@@ -88,7 +92,8 @@ export default class Schema {
 
   relationExistsAlready(parentId, childId) {
     const childWithId = this.elements.get(parentId).children.filter(element => element.id == childId).length
-    return childWithId > 0
+    const isParent = this.elements.get(parentId).isParent(childId);
+    return childWithId > 0 || isParent
   }
 
   selectElement(id) {

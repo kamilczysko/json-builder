@@ -177,6 +177,13 @@ export default class Element {
     return this.name;
   }
 
+  isParent(id) {
+    if(this.parent == null) {
+      return false;
+    }
+    return this.parent.id == id
+  }
+
   setParent(parent) {
     this.parent = parent;
     if (parent == null) {

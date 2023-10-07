@@ -90,4 +90,5 @@ button:hover {
 .jsonContainer {
     overflow: scroll;
     resize: none;
+    outline: none;
 }

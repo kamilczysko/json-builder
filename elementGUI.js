@@ -37,8 +37,14 @@ export default class ElementGUI {
             this.onSelect();
         }
 
-        let inputDiv = document.createElement("div");
-        inputDiv.className = `elementInput`;
+        let elementHeader = document.createElement("div");
+        elementHeader.className = `element-header`;
+
+        let topPanel = document.createElement("div");
+        topPanel.className = `top-panel`;
+
+        let nameContainer = document.createElement("div");
+        nameContainer.className = `name`;
 
         let inputName = document.createElement("input");
         inputName.type = "text"
@@ -50,35 +56,53 @@ export default class ElementGUI {
         inputName.ondblclick = () => {
             event.stopPropagation();
         }
+        let nameLabel = document.createElement("span");
+        nameLabel.innerText = "name: "
 
-        let arrayInputControl = document.createElement("div");
-        arrayInputControl.style.display = "flex"
-        arrayInputControl.style.flexDirection = "column"
-        arrayInputControl.style.gap = "0";
-        arrayInputControl.style.minWidth = "50px";
+        nameContainer.appendChild(nameLabel);
+        nameContainer.appendChild(inputName);
 
-        let inputArrray = document.createElement("input");
-        inputArrray.type = "checkbox"
-        inputArrray.oninput = () => {
+        let checkbox = document.createElement("div");
+        checkbox.className = `checkbox`;
+
+        let isArrayCheckbox = document.createElement("input");
+        isArrayCheckbox.type = "checkbox"
+        isArrayCheckbox.oninput = () => {
             this.element.setIsArray(inputArrray.checked == true);
             this.onChange();
         }
         let label = document.createElement("span");
-        label.style.fontWeight = "100"
-        label.style.fontSize = "10px"
-        label.innerHTML = "is array"
-        arrayInputControl.appendChild(inputArrray);
-        arrayInputControl.appendChild(label);
+        label.innerText = "is array"
 
-        inputDiv.appendChild(inputName);
-        inputDiv.appendChild(arrayInputControl);
+        checkbox.appendChild(isArrayCheckbox);
+        checkbox.appendChild(label);
+        
+        topPanel.appendChild(nameContainer);
+        topPanel.appendChild(checkbox);
 
-        let drop = document.createElement("div");
-        drop.className = `element drop`;
-        drop.id = this.id + "-drop";
+        let buttonPanel = document.createElement("div");
+        buttonPanel.className = `button-panel`;
 
-        mainElement.appendChild(inputDiv);
-        mainElement.appendChild(drop);
+        let addButton = document.createElement("button");
+        addButton.innerText = "add";
+        let copyButton = document.createElement("button");
+        copyButton.innerText = "copy";
+        let removeButton = document.createElement("button");
+        removeButton.innerText = "remove";
+        
+        buttonPanel.appendChild(addButton);
+        buttonPanel.appendChild(copyButton);
+        buttonPanel.appendChild(removeButton);
+
+        elementHeader.appendChild(topPanel);
+        elementHeader.appendChild(buttonPanel);
+        
+        let elementContainer = document.createElement("div");
+        elementContainer.className = `element-container`;
+        elementContainer.id = this.id + "-drop";
+
+        mainElement.appendChild(elementHeader);
+        mainElement.appendChild(elementContainer);
 
         InteractiveSettings.setDraggable(id, this.position, this.children);
         InteractiveSettings.setResizable(id);
@@ -89,7 +113,7 @@ export default class ElementGUI {
             this.onChange();
         });
 
-        return { main: mainElement, drop: drop };
+        return { main: mainElement, drop: elementContainer };
     }
 
     getId() {

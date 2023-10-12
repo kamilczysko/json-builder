@@ -1,7 +1,3 @@
-import "interact"
-import "elementGUI"
-import * as InteractiveSettings from "interactivesettings"
-
 export default class Element {
   constructor(id) {
     this.id = id;
@@ -10,7 +6,6 @@ export default class Element {
     this.children = [];
     this.parent = null;
     this.isSelected = false;
-    this.position = position;
     this.layer = 0;
     this.attributes = new Map();
     this.isArray = false;
@@ -24,14 +19,6 @@ export default class Element {
     child.setLayer(this.layer + 1);
   }
 
-  setPosition(position) {
-    this.position = position;
-  }
-
-  getPosition() {
-    return this.position;
-  }
-  
   setParent(parent) {
     this.parent = parent;
   }
@@ -95,6 +82,83 @@ export default class Element {
 
   getList() {
     return this.list;
+  }
+
+  getJSON() {
+    if (this.isArray) {
+      let result = "";
+      this.list.forEach(value => {
+        if (this.isNumeric(value)) {
+          result += value + ",";
+        } else {
+          result += "\"" + value + "\",";
+        }
+      })
+      return "\"" + this.name + "\":[" + result.slice(0, -1) + "]";
+    }
+    if (this.getAttributesJSON() == null && this.getChildrenJSON() == null) {
+      return "\"" + this.name + "\": null";
+    }
+    let attrs = this.getAttributesJSON() != null ? this.getAttributesJSON() : null
+    let childs = this.getChildrenJSON() != null ? this.getChildrenJSON() : null
+    if (attrs && childs) {
+      return '"' + this.name + "\": {" +
+        attrs + "," +
+        childs +
+        "}";
+    } else if (attrs) {
+      return '"' + this.name + "\": {" +
+        attrs +
+        "}";
+    }
+    else {
+      return '"' + this.name + "\": {" +
+        childs +
+        "}";
+    }
+  }
+
+  getJSONAsArrayItem() {
+    if (this.getAttributesJSON() == null && this.getChildrenJSON() == null) {
+      return "null";
+    }
+    let attrs = this.getAttributesJSON() != null ? this.getAttributesJSON() : ""
+    let childs = this.getChildrenJSON() != null ? ", " + this.getChildrenJSON() : ""
+    console.log("childs:" + childs)
+    return "{" +
+      attrs +
+      childs +
+      "}";
+  }
+
+  getAttributesJSON() {
+    if (this.attributes.size == 0) {
+      return null;
+    }
+    let result = "";
+    this.attributes.forEach((val, key) => {
+      if (this.isNumeric(val)) {
+        result += "\"" + key + "\": " + "" + val + ","
+      } else {
+        result += "\"" + key + "\": " + "\"" + val + "\","
+      }
+    })
+    return result.slice(0, -1);
+  }
+
+  getChildrenJSON() {
+    if (this.children.length == 0) {
+      return null;
+    }
+    let res = "";
+    this.children.forEach(child => {
+      res += child.getJSON() + ",";
+    })
+    return res.slice(0, -1);
+  }
+
+  isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
   }
 
 }

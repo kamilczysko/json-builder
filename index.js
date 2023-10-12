@@ -1,4 +1,5 @@
 import Schema from "schema"
+import "interact"
 
 const schema = new Schema();
 
@@ -26,6 +27,18 @@ document.getElementById("schemaContainer").ondblclick = (event) => {
 document.getElementById("textarea").oninput = () => {
     schema.createSchemaFromJSON(document.getElementById("textarea").value);
 }
+
+interact("#schemaContainer").dropzone({
+      ondrop: (event) => {
+        const toRemove = this.elements.get(event.relatedTarget.id);
+        if (toRemove.getElement().getParent()) {
+          const parentId = toRemove.getElement().getParent().getId();
+          this.elements.get(parentId).deleteChild(toRemove);
+        }
+      }
+    })
+  
+
 let savedElement = null;
 
 // document.body.onkeydown = (ev) => {

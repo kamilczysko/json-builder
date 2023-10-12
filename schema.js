@@ -18,18 +18,6 @@ export default class Schema {
     }
   }
 
-  setMainContainer() {
-    interact("#schemaContainer").dropzone({
-      ondrop: (event) => {
-        const toRemove = this.elements.get(event.relatedTarget.id);
-        if (toRemove.getElement().getParent()) {
-          const parentId = toRemove.getElement().getParent().getId();
-          this.elements.get(parentId).deleteChild(toRemove);
-        }
-      }
-    })
-  }
-
   addElement(position) {
     const newId = "element-" + this.currentId;
     const element = new ElementGUI(newId, newId, position);
@@ -136,7 +124,7 @@ export default class Schema {
     document.getElementById("attributes").appendChild(attribute);
   }
 
-  addListToView(element, value, index) { //todo fix editing after remove
+  addListToView(element, value, index) {
     const attribute = document.createElement("div");
     attribute.classList.add("attribute");
     const valueLabel = document.createElement("span");
@@ -145,8 +133,6 @@ export default class Schema {
     valueInput.type = "text";
     valueInput.value = value;
     valueInput.oninput = () => {
-      console.log("index: "+index + " - "+valueInput.value)
-      console.log(element)
       element.editInList(valueInput.value, index);
     }
     const removeButton = document.createElement("button");

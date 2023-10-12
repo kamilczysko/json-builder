@@ -12,6 +12,7 @@ export default class ElementGUI {
 
         this.onChange = null;
         this.onSelect = null;
+        this.provideChild = null;
 
         this.gui = this.initGraphicalRepresentation(id, position, name);
     }
@@ -77,9 +78,13 @@ export default class ElementGUI {
         mainElement.appendChild(inputDiv);
         mainElement.appendChild(drop);
 
-        // InteractiveSettings.setDraggable(id, this.position, this.children);
-        // InteractiveSettings.setResizable(id);
-        // InteractiveSettings.setDropzone(id, null);
+        InteractiveSettings.setDraggable(id, this.position, this.children);
+        InteractiveSettings.setResizable(id);
+        InteractiveSettings.setDropzone(id, (childId) => {
+            const child = this.provideChild(childId);
+            this.addChild(child);
+            this.onChange();
+        });
 
         return mainElement;
     }
@@ -92,17 +97,18 @@ export default class ElementGUI {
         return this.gui;
     }
 
-    addChildren(child) {
-        const childElement = child.getElement();
-        this.element.addChild(childElement);
-        this.gui.appendChild(child)
+    addChild(child) {
+        console.log("+++++++++++++")
+        console.log(child.getElementGraphical())
+        console.log(this.getElementGraphical())
+        this.element.addChild(child.getElement());
+        this.gui.appendChild(child.getElementGraphical())
         this.onChange();
     }
 
     deleteChild(child) {
-        const childElement = child.getElement();
-        this.element.removeChild(childElement);
-        this.gui.deleteChild(child);
+        this.element.removeChild(child.getElement());
+        this.gui.deleteChild(child.getElementGraphical());
         this.onChange();
     }
 
@@ -131,6 +137,10 @@ export default class ElementGUI {
 
     setOnChange(onChange){
         this.onChange = onChange;
+    }
+
+    setChildProvider(provideChild) {
+        this.provideChild = provideChild;
     }
 
     getJSON() {

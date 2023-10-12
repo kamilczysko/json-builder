@@ -20,7 +20,8 @@ export default class Element {
 
   setParent(parent) {
     this.parent = parent;
-    this.setLayer(this.parent.getLayer()+1)
+    console.log(parent)
+    this.setLayer(this.parent.getLayer+1)
   }
 
   setPrimary(isPrimary) {

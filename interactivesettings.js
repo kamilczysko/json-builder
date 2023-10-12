@@ -87,7 +87,7 @@ export function setResizable(id) {
 export function setDropzone(id, setRelation) {
     interact("#" + id).dropzone({
         ondrop: (event) => {
-            setRelation(event.target.id, event.relatedTarget.id);
+            setRelation(event.relatedTarget.id);
 
             let dropzoneElement = document.getElementById(id + "-drop");
             dropzoneElement.classList.remove('above')

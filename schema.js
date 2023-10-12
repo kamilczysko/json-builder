@@ -14,9 +14,6 @@ export default class Schema {
     try{
       const json = JSON.parse(text);
       const map = new Map(Object.entries(json));
-      map.forEach((val, key) => {
-        console.log(key + "_"+val)
-      })
       document.getElementById("textarea").value = JSON.stringify(json, null, 5)
     } catch {
 
@@ -51,9 +48,31 @@ export default class Schema {
     const newId = "element-" + this.actualId;
     const element = new Element(newId, position, parent, children, isArray, (parentId, childId) => this.setRelation(parentId, childId), () => this.updateJSON(), () => this.updateElementTypeData());
     this.elements.set(newId, element);
+    element.addElementToView();
     element.onClick(() => this.selectElement(newId))
     this.actualId++;
     this.updateJSON();
+  }
+
+
+  addCopiedElement(element) {
+    const newId = "element-" + this.actualId;
+    const newPos = element.getPosition();
+    newPos.x += 100;
+    
+    const copiedElement = 
+    new Element(newId, newPos, element.getParent(),null, element.isArray, 
+      (parentId, childId) => this.setRelation(parentId, childId), () => this.updateJSON(), () => this.updateElementTypeData());
+    copiedElement.setName(element.getName() + "-copy")
+    copiedElement.setLayer(element.getLayer());
+    copiedElement.setAttributes(new Map(element.getAttributes()))
+    copiedElement.setList(element.getList().slice())
+    this.elements.set(newId, copiedElement);
+    copiedElement.addElementToView()
+    copiedElement.onClick(() => this.selectElement(newId))
+    this.actualId++;
+    this.updateJSON();
+    this.updateElementTypeData();
   }
 
   deleteSelectedElement() {
@@ -70,6 +89,7 @@ export default class Schema {
       return;
     }
     this.removeFromPreviousParent(childId);
+
     this.elements.get(parentId).addChild(this.elements.get(childId))
     this.elements.get(childId).setParent(this.elements.get(parentId))
   }

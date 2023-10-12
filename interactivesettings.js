@@ -10,9 +10,11 @@ export function setDraggable(id, position, children) {
 
                 event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
 
-                children.forEach((child) => {
-                    child.move(event.dx, event.dy);
-                });
+                if (children) {
+                    children.forEach((child) => {
+                        child.move(event.dx, event.dy);
+                    });
+                }
             },
             end(event) {
             }

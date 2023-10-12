@@ -3,7 +3,7 @@ import Schema from "schema"
 const schema = new Schema();
 
 function add() {
-    schema.addElement({x:0, y:0}, null, null, false);
+    schema.addElement({ x: 0, y: 0 }, null, null, false);
 }
 
 document.getElementById("addButton").onclick = () => {
@@ -11,8 +11,7 @@ document.getElementById("addButton").onclick = () => {
 }
 
 document.getElementById("removeButton").onclick = () => {
-    // schema.deleteSelectedElement();
-    console.log(schema.getElements())
+    schema.deleteSelectedElement();
 }
 
 document.getElementById("schemaContainer").ondblclick = (event) => {
@@ -26,4 +25,18 @@ document.getElementById("schemaContainer").ondblclick = (event) => {
 
 document.getElementById("textarea").oninput = () => {
     schema.createSchemaFromJSON(document.getElementById("textarea").value);
+}
+let savedElement = null;
+
+document.body.onkeydown = (ev) => {
+    ev = ev || window.event; // Event object 'ev' 
+    var key = ev.which || ev.keyCode; // Detecting keyCode 
+    
+    // If key pressed is V and if ctrl is true. 
+    if (key == 86) {
+        schema.addCopiedElement(savedElement);
+    }
+    else if (key == 67) {
+        savedElement = schema.getSelectedElement();
+    }
 }

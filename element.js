@@ -17,7 +17,7 @@ export default class Element {
     this.updateElementData = updateElementData;
     if (children) {
       this.children = children
-      child.setParent(this);
+      // this.setParent(this);
     }
 
     if (parent) {
@@ -25,10 +25,11 @@ export default class Element {
       parent.addChild(this);
 
     }
-    this.setElementOnView(id);
-    InteractiveSettings.setDraggable(id, this.position, this.children);
-    InteractiveSettings.setResizable(id);
-    InteractiveSettings.setDropzone(id, setRelation);
+    this.setRelation = setRelation;
+    // this.setElementOnView(id);
+    // InteractiveSettings.setDraggable(id, this.position, this.children);
+    // InteractiveSettings.setResizable(id);
+    // InteractiveSettings.setDropzone(id, setRelation);
 
   }
 
@@ -39,6 +40,38 @@ export default class Element {
     } else {
       document.getElementById(this.id).classList.remove("selected")
     }
+  }
+
+  getChildren() {
+    return this.children;
+  }
+
+  getParent() {
+    return this.parent;
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  setElementId(id){
+    this.id = id
+  }
+  
+  setName(name) {
+    this.name = name
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  setPosition(position) {
+    this.position = position;
+  }
+
+  getPosition() {
+    return this.position;
   }
 
   addToList(value) {
@@ -64,6 +97,10 @@ export default class Element {
 
   setLayer(layer) {
     this.layer = layer
+  }
+
+  getLayer() {
+    return this.layer
   }
 
   setName(name) {
@@ -156,6 +193,14 @@ export default class Element {
     return !isNaN(parseFloat(n)) && isFinite(n);
   }
 
+  setList(list) {
+    this.list = list;
+  }
+
+  getList() {
+    return this.list;
+  }
+
   getChildrenJSON() {
     if (this.children.length == 0) {
       return null;
@@ -181,7 +226,7 @@ export default class Element {
     if(this.parent == null) {
       return false;
     }
-    return this.parent.id == id
+    return this.parent.id == idx
   }
 
   setParent(parent) {
@@ -225,10 +270,11 @@ export default class Element {
     });
   }
 
-  setElementOnView(id) {
+  setElementOnView() {
     let mainElement = document.createElement("div");
     mainElement.className = `element`;
-    mainElement.id = id;
+    mainElement.style.zIndex = this.layer;
+    mainElement.id = this.id;
     mainElement.style.position = "absolute";
     mainElement.style.transform =
       `translate(${this.position.x}px, ${this.position.y}px)`;
@@ -237,9 +283,9 @@ export default class Element {
     inputDiv.className = `elementInput`;
 
     let inputName = document.createElement("input");
-    inputName.value = id
     inputName.type = "text"
     inputName.className = `elementInput input`
+    inputName.value = this.name
     inputName.oninput = () => {
       this.setName(inputName.value);
       this.updateJSON();
@@ -273,12 +319,19 @@ export default class Element {
 
     let drop = document.createElement("div");
     drop.className = `element drop`;
-    drop.id = id + "-drop";
+    drop.id = this.id + "-drop";
 
     mainElement.appendChild(inputDiv);
     mainElement.appendChild(drop);
 
     document.getElementById("schemaContainer").appendChild(mainElement)
+  }
+
+  addElementToView() {
+    this.setElementOnView();
+    InteractiveSettings.setDraggable(this.id, this.position, this.children);
+    InteractiveSettings.setResizable(this.id);
+    InteractiveSettings.setDropzone(this.id, this.setRelation);
   }
 
   onClick(action) {

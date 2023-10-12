@@ -3,7 +3,7 @@ export default class Element {
     this.id = id;
     this.isPrimary = false;
     this.name = null;
-    this.children = [];
+    this.children = new Map();
     this.parent = null;
     this.isArray = false;
     this.layer = 0;
@@ -12,16 +12,18 @@ export default class Element {
   }
 
   addChild(child) {
-    this.children.push(child);
+    this.children.set(child.getId(), child);
     child.setParent(this);
     child.setPrimary(false);
     child.setLayer(this.layer + 1);
   }
 
   setParent(parent) {
+    if (this.parent && this.parent.getId() != parent.getId()) {
+      this.parent.removeChild(this.id);
+    }
     this.parent = parent;
-    console.log(parent)
-    this.setLayer(this.parent.getLayer+1)
+    this.setLayer(this.parent.getLayer + 1)
   }
 
   setPrimary(isPrimary) {
@@ -32,17 +34,20 @@ export default class Element {
     return this.isPrimary;
   }
 
+  getId() {
+    return this.id;
+  }
+   
   removeChild(id) {
-    this.children.filter(child => child.id == id).forEach(child => { //remove parent new parent is not set yet 
-      if (child.getParent().getId() == this.id) {
-        child.setParent(null);
-      }
-    })
-    this.children = this.children.filter(child => child.id != id)
+    this.children.delete(id)
   }
 
   setLayer(layerNumber) {
     this.layer = layerNumber;
+  }
+
+  getParent() {
+    return this.parent;
   }
 
   setName(name) {
@@ -156,11 +161,11 @@ export default class Element {
   }
 
   getChildrenJSON() {
-    if (this.children.length == 0) {
+    if (this.children.size == 0) {
       return null;
     }
     let res = "";
-    this.children.forEach(child => {
+    Array.from(this.children.values()).forEach(child => {
       res += child.getJSON() + ",";
     })
     return res.slice(0, -1);

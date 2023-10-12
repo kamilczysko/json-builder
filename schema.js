@@ -11,7 +11,6 @@ export default class Schema {
   createSchemaFromJSON(text) {
     try {
       const json = JSON.parse(text);
-      // const map = new Map(Object.entries(json));
       document.getElementById("textarea").value = JSON.stringify(json, null, 5)
     } catch {
 
@@ -22,7 +21,10 @@ export default class Schema {
     const newId = "element-" + this.currentId;
     const element = new ElementGUI(newId, newId, { x: 0, y: 0 });
     element.setOnSelect(() => this.selectElement(newId));
-    element.setOnChange(() => this.updateJSON());
+    element.setOnChange(() => {
+      this.updateJSON();
+      this.reloadList();
+    });
     element.setChildProvider((childId) => this.getChildElement(childId))
 
     if (this.currentId == 0) { //todo set primary first element with lowest layer or if even layers with more children
@@ -46,6 +48,9 @@ export default class Schema {
         element.setSelected(false);
       }
     })
+    this.selectedElementId = id;
+    // this.addAttributesToView();
+    // this.addListToView();
   }
 
   getMainElement() {
@@ -118,7 +123,7 @@ export default class Schema {
 
   reloadList() {
     document.getElementById("attributes").innerHTML = null;
-    this.setListOnView(this.selectedElementId);
+    // this.setListOnView(this.selectedElementId);
   }
 
   updateJSON() {

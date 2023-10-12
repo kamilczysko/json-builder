@@ -98,9 +98,6 @@ export default class ElementGUI {
     }
 
     addChild(child) {
-        console.log("+++++++++++++")
-        console.log(child.getElementGraphical())
-        console.log(this.getElementGraphical())
         this.element.addChild(child.getElement());
         this.gui.appendChild(child.getElementGraphical())
         this.onChange();

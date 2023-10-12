@@ -82,9 +82,9 @@ export default class Element {
     this.list.push(data);
   }
 
-  removeFromList(item) {
-    const index = this.list.indexOf(item);
-    this.list = this.list.splice(index);
+  removeFromList(value) {
+    const index = this.list.indexOf(value);
+    this.list.splice(index, 1);
   }
 
   editInList(idx, value) {

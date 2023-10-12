@@ -155,13 +155,13 @@ export default class ElementGUI {
         this.onChange();
     }
 
-    removeFromList(item){
-        this.element.removeFromList(item);
+    removeFromList(value){
+        this.element.removeFromList(value);
         this.onChange();
     }
 
-    editInList(item, index){
-        this.element.editInList(item, index);
+    editInList(value, index){
+        this.element.editInList(index, value);
         this.onChange();
     }
 

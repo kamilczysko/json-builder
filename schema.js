@@ -91,17 +91,15 @@ export default class Schema {
   }
 
   setListOnView(elementId) {
-    const element = this.elements.get(elementId).getElement();
-    const attributes = element.getList();
-    attributes.forEach((value, index) => {
+    const element = this.elements.get(elementId);
+    element.getElement().getList().forEach((value, index) => {
       this.addListToView(element, value, index);
     })
   }
 
   setAttributesOnView(elementId) {
     const element = this.elements.get(elementId);
-    const attributes = element.getElement().getAttributes();
-    attributes.forEach((value, key) => {
+    element.getElement().getAttributes().forEach((value, key) => {
       this.addAttributesToView(element, key, value);
     })
   }
@@ -138,7 +136,7 @@ export default class Schema {
     document.getElementById("attributes").appendChild(attribute);
   }
 
-  addListToView(element, value, index) {
+  addListToView(element, value, index) { //todo fix editing after remove
     const attribute = document.createElement("div");
     attribute.classList.add("attribute");
     const valueLabel = document.createElement("span");
@@ -147,14 +145,15 @@ export default class Schema {
     valueInput.type = "text";
     valueInput.value = value;
     valueInput.oninput = () => {
+      console.log("index: "+index + " - "+valueInput.value)
+      console.log(element)
       element.editInList(valueInput.value, index);
     }
     const removeButton = document.createElement("button");
     removeButton.innerText = "remove";
     removeButton.onclick = () => {
       element.removeFromList(valueInput.value);
-      document.getElementById("attributes").removeChild(attribute);
-      this.reloadList();
+      this.updateElementTypeData();
     }
 
     attribute.appendChild(valueLabel);
@@ -162,7 +161,6 @@ export default class Schema {
     attribute.appendChild(removeButton);
     document.getElementById("attributes").appendChild(attribute);
   }
-
   reloadList() {
     document.getElementById("attributes").innerHTML = null;
     this.setListOnView(this.selectedElementId);

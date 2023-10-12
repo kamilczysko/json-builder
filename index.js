@@ -9,10 +9,6 @@ document.getElementById("addButton").onclick = () => {
     add();
 }
 
-document.getElementById("removeButton").onclick = () => {
-    schema.deleteSelectedElement();
-}
-
 document.getElementById("schemaContainer").ondblclick = (event) => {
     const position = {
         x: event.offsetX,

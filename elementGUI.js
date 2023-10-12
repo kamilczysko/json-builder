@@ -15,6 +15,7 @@ export default class ElementGUI {
         this.provideChild = null;
         this.generateChild = null;
         this.typeChangeEvent = null;
+        this.removeElement = null;
 
         const graphicsElements = this.initGraphicalRepresentation(id, position, name);
         this.guiElement = graphicsElements.main;
@@ -99,6 +100,17 @@ export default class ElementGUI {
         copyButton.innerText = "copy";
         let removeButton = document.createElement("button");
         removeButton.innerText = "remove";
+        removeButton.onclick = () => {
+            this.removeElement();
+            if (this.element.getParent()) {
+                this.element.getParent().removeChild(this.id);
+            } else {
+                document.getElementById("schemaContainer").removeChild(this.getElementGraphical())
+            }
+            this.element = null;
+            this.children = [];
+            this.onChange();
+        }
 
         buttonPanel.appendChild(addButton);
         buttonPanel.appendChild(copyButton);
@@ -118,7 +130,6 @@ export default class ElementGUI {
         mainElement.appendChild(elementContainer);
 
         InteractiveSettings.setDraggable(id, this.position, this.children);
-        // InteractiveSettings.setResizable(id);
         InteractiveSettings.setDropzone(id, (childId) => {
             const child = this.provideChild(childId);
             this.addChild(child);
@@ -192,6 +203,10 @@ export default class ElementGUI {
 
     setOnTypeChange(typeChangeEvent) {
         this.typeChangeEvent = typeChangeEvent
+    }
+
+    setOnDelete(onRemove) {
+        this.removeElement = onRemove;
     }
 
     getJSON() {

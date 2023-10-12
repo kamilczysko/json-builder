@@ -32,7 +32,7 @@ export default class Schema {
 
   addElementToParent(parentId) {
     const newId = "element-" + this.currentId;
-    const element = new ElementGUI(newId, newId, {x:0, y:0});
+    const element = new ElementGUI(newId, newId, { x: 0, y: 0 });
     element.setOnSelect(() => this.selectElement(newId));
     element.setOnChange(() => {
       this.updateJSON();
@@ -41,6 +41,7 @@ export default class Schema {
     element.setOnTypeChange(() => this.updateElementTypeData());
     element.setChildProvider((childId) => this.getChildElement(childId));
     element.setOnAddChild((parentId) => this.addElementToParent(parentId));
+    element.setOnDelete(() => this.removeElement(element.getId()))
 
     if (this.currentId == 0) { //todo set primary first element with lowest layer or if even layers with more children
       element.getElement().setPrimary(true);
@@ -62,6 +63,7 @@ export default class Schema {
     element.setOnTypeChange(() => this.updateElementTypeData());
     element.setChildProvider((childId) => this.getChildElement(childId));
     element.setOnAddChild((parentId) => this.addElementToParent(parentId));
+    element.setOnDelete(() => this.removeElement(element.getId()))
 
     if (this.currentId == 0) { //todo set primary first element with lowest layer or if even layers with more children
       element.getElement().setPrimary(true);
@@ -94,12 +96,19 @@ export default class Schema {
     if (primaryItems.length > 0) {
       return primaryItems[0]
     }
+    if(Array.from(this.elements.values()).length == 1) {
+      Array.from(this.elements.values())[0].getElement().setPrimary(true);
+      return Array.from(this.elements.values())[0]
+    }
     return null;
   }
 
   updateElementTypeData() {
     const actualElement = this.elements.get(this.selectedElementId);
     document.getElementById("attributes").innerHTML = null;
+    if(actualElement == null) {
+      return;
+    }
     if (actualElement.getElement().isArray) {
       this.setListOnView(this.selectedElementId);
       document.getElementById("addAttribute").onclick = () => {
@@ -146,7 +155,7 @@ export default class Schema {
       element.setAttribute(keyInput.value, valueInput.value);
     }
     valueInput.onkeydown = (ev) => {
-      if(ev.key === "Enter") {
+      if (ev.key === "Enter") {
         ev.preventDefault();
         this.addAttributesToView(element, "", "");
       }
@@ -157,7 +166,7 @@ export default class Schema {
       element.deleteAttribute(keyInput.value);
       document.getElementById("attributes").removeChild(attribute);
     }
-    
+
     attribute.appendChild(keyLabel);
     attribute.appendChild(keyInput);
     attribute.appendChild(valueLabel);
@@ -166,7 +175,7 @@ export default class Schema {
     document.getElementById("attributes").appendChild(attribute);
     keyInput.select();
   }
-  
+
   addListToView(element, value, index) {
     const attribute = document.createElement("div");
     attribute.classList.add("attribute");
@@ -179,7 +188,7 @@ export default class Schema {
       element.editInList(valueInput.value, index);
     }
     valueInput.onkeydown = (ev) => {
-      if(ev.key === "Enter") {
+      if (ev.key === "Enter") {
         ev.preventDefault();
         element.addToList("")
         this.addListToView(element, "", element.getElement().getList().length - 1);
@@ -210,5 +219,15 @@ export default class Schema {
       json = JSON.stringify(JSON.parse("{" + mainElement.getElement().getJSON() + "}"), null, 5)
     }
     document.getElementById("textarea").value = json;
+  }
+
+  removeElement(id) {
+    const elementToRemove = this.elements.get(id);
+    if (elementToRemove.getElement().getParent()) {
+      const parent = this.elements.get(elementToRemove.getElement().getParent().getId());
+      parent.deleteChild(elementToRemove);
+    }
+    this.elements.delete(id);
+    this.selectedElementId = null;
   }
 }

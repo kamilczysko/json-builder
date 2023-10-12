@@ -30,19 +30,23 @@ export default class Schema {
     })
   }
 
-  addElementToParent() {
+  addElementToParent(parentId) {
     const newId = "element-" + this.currentId;
     const element = new ElementGUI(newId, newId, {x:0, y:0});
     element.setOnSelect(() => this.selectElement(newId));
     element.setOnChange(() => {
       this.updateJSON();
+      // ;
     });
-    element.setChildProvider((childId) => this.getChildElement(childId))
+    element.setOnTypeChange(() => this.updateElementTypeData());
+    element.setChildProvider((childId) => this.getChildElement(childId));
+    element.setOnAddChild((parentId) => this.addElementToParent(parentId));
 
     if (this.currentId == 0) { //todo set primary first element with lowest layer or if even layers with more children
       element.getElement().setPrimary(true);
     }
     this.elements.set(newId, element);
+    this.elements.get(parentId).addChild(element);
     this.currentId++;
     return element;
   }
@@ -53,9 +57,11 @@ export default class Schema {
     element.setOnSelect(() => this.selectElement(newId));
     element.setOnChange(() => {
       this.updateJSON();
+      // this.updateElementTypeData();
     });
-    element.setChildProvider((childId) => this.getChildElement(childId))
-    element.setOnAddChild(() => this.addElementToParent());
+    element.setOnTypeChange(() => this.updateElementTypeData());
+    element.setChildProvider((childId) => this.getChildElement(childId));
+    element.setOnAddChild((parentId) => this.addElementToParent(parentId));
 
     if (this.currentId == 0) { //todo set primary first element with lowest layer or if even layers with more children
       element.getElement().setPrimary(true);
@@ -139,21 +145,28 @@ export default class Schema {
     valueInput.oninput = () => {
       element.setAttribute(keyInput.value, valueInput.value);
     }
+    valueInput.onkeydown = (ev) => {
+      if(ev.key === "Enter") {
+        ev.preventDefault();
+        this.addAttributesToView(element, "", "");
+      }
+    }
     const removeButton = document.createElement("button");
     removeButton.innerText = "remove";
     removeButton.onclick = () => {
-      element.removeAttribute(keyInput.value);
+      element.deleteAttribute(keyInput.value);
       document.getElementById("attributes").removeChild(attribute);
     }
-
+    
     attribute.appendChild(keyLabel);
     attribute.appendChild(keyInput);
     attribute.appendChild(valueLabel);
     attribute.appendChild(valueInput);
     attribute.appendChild(removeButton);
     document.getElementById("attributes").appendChild(attribute);
+    keyInput.select();
   }
-
+  
   addListToView(element, value, index) {
     const attribute = document.createElement("div");
     attribute.classList.add("attribute");
@@ -164,6 +177,13 @@ export default class Schema {
     valueInput.value = value;
     valueInput.oninput = () => {
       element.editInList(valueInput.value, index);
+    }
+    valueInput.onkeydown = (ev) => {
+      if(ev.key === "Enter") {
+        ev.preventDefault();
+        element.addToList("")
+        this.addListToView(element, "", element.getElement().getList().length - 1);
+      }
     }
     const removeButton = document.createElement("button");
     removeButton.innerText = "remove";
@@ -176,6 +196,7 @@ export default class Schema {
     attribute.appendChild(valueInput);
     attribute.appendChild(removeButton);
     document.getElementById("attributes").appendChild(attribute);
+    valueInput.select();
   }
   reloadList() {
     document.getElementById("attributes").innerHTML = null;

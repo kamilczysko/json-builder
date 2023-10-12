@@ -13,7 +13,8 @@ export default class ElementGUI {
         this.onChange = null;
         this.onSelect = null;
         this.provideChild = null;
-        this.generateChild = null
+        this.generateChild = null;
+        this.typeChangeEvent = null;
 
         const graphicsElements = this.initGraphicalRepresentation(id, position, name);
         this.guiElement = graphicsElements.main;
@@ -29,7 +30,8 @@ export default class ElementGUI {
             mainElement.style.transform =
                 `translate(${position.x}px, ${position.y}px)`;
         }
-        mainElement.onclick = () => {
+        mainElement.onclick = (event) => {
+            event.stopPropagation();
             if (this.isSelected) {
                 return;
             }
@@ -74,7 +76,7 @@ export default class ElementGUI {
         isArrayCheckbox.type = "checkbox"
         isArrayCheckbox.oninput = () => {
             this.element.setIsArray(isArrayCheckbox.checked == true);
-            this.onChange();
+            this.typeChangeEvent();
         }
         let label = document.createElement("span");
         label.innerText = "is array"
@@ -91,8 +93,7 @@ export default class ElementGUI {
         let addButton = document.createElement("button");
         addButton.innerText = "add";
         addButton.onclick = () => {
-            const newChild = this.generateChild();
-            this.addChild(newChild);
+            this.generateChild(this.id);
         }
         let copyButton = document.createElement("button");
         copyButton.innerText = "copy";
@@ -108,13 +109,16 @@ export default class ElementGUI {
 
         let elementContainer = document.createElement("div");
         elementContainer.className = `element-container`;
+        elementContainer.ondblclick = () => {
+            this.generateChild(this.id);
+        }
         elementContainer.id = this.id + "-drop";
 
         mainElement.appendChild(elementHeader);
         mainElement.appendChild(elementContainer);
 
         InteractiveSettings.setDraggable(id, this.position, this.children);
-        InteractiveSettings.setResizable(id);
+        // InteractiveSettings.setResizable(id);
         InteractiveSettings.setDropzone(id, (childId) => {
             const child = this.provideChild(childId);
             this.addChild(child);
@@ -184,6 +188,10 @@ export default class ElementGUI {
 
     setOnAddChild(generateChild) {
         this.generateChild = generateChild;
+    }
+
+    setOnTypeChange(typeChangeEvent) {
+        this.typeChangeEvent = typeChangeEvent
     }
 
     getJSON() {

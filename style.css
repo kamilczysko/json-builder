@@ -92,10 +92,9 @@ body{
     justify-content: space-between;
 }
 
-.parent {
-    background: rgba(255, 85, 170, 0.795);
+.parent { 
     border-radius: 15px;
-    border: 1px solid black;
+    border: 3px solid black;
     min-width: 100%;
 }
 
@@ -110,6 +109,8 @@ body{
     border: 1px dotted black;
     border-radius: 10px;
     position: relative;
+    padding-bottom: 25px;
+    padding-top: 25px;
 }
 
 .above {
@@ -119,8 +120,9 @@ body{
 }
 
 .selected {
-    border: 1px dashed black;
+    border: 2px dashed black;
     background-color: rgba(150, 150, 251, 0.758);
+    box-shadow: 1px 4px 15px rgb(255, 14, 247);
 }
 
 .panel {

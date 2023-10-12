@@ -29,10 +29,10 @@ document.getElementById("textarea").oninput = () => {
 let savedElement = null;
 
 document.body.onkeydown = (ev) => {
-    ev = ev || window.event; // Event object 'ev' 
-    var key = ev.which || ev.keyCode; // Detecting keyCode 
+    ev = ev || window.event; 
+    var key = ev.which || ev.keyCode;
     
-    // If key pressed is V and if ctrl is true. 
+    //todo FIX WITH CTRL
     if (key == 86) {
         schema.addCopiedElement(savedElement);
     }

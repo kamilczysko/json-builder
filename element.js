@@ -5,10 +5,9 @@ export default class Element {
     this.name = null;
     this.children = [];
     this.parent = null;
-    this.isSelected = false;
+    this.isArray = false;
     this.layer = 0;
     this.attributes = new Map();
-    this.isArray = false;
     this.list = [];
   }
 
@@ -21,10 +20,15 @@ export default class Element {
 
   setParent(parent) {
     this.parent = parent;
+    this.setLayer(this.parent.getLayer()+1)
   }
 
   setPrimary(isPrimary) {
     this.isPrimary = isPrimary;
+  }
+
+  getIsPrimary() {
+    return this.isPrimary;
   }
 
   removeChild(id) {
@@ -40,8 +44,8 @@ export default class Element {
     this.layer = layerNumber;
   }
 
-  setSelected(selection) {
-    this.isSelected = selection;
+  setName(name) {
+    this.name = name;
   }
 
   getAttributes() {
@@ -82,6 +86,10 @@ export default class Element {
 
   getList() {
     return this.list;
+  }
+
+  setIsArray(isArray) {
+    this.isArray = isArray;
   }
 
   getJSON() {

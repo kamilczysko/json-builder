@@ -1,14 +1,18 @@
-import "element"
+import Element from "element"
+import * as InteractiveSettings from "interactivesettings"
 
 export default class ElementGUI {
     constructor(id, name, position) {
         this.id = id;
         this.name = name;
         this.position = position;
-
+        this.isSelected = true;
         this.element = new Element(id);
-        this.element.setName = name;
-        
+        this.element.setName(name);
+
+        this.onChange = null;
+        this.onSelect = null;
+
         this.gui = this.initGraphicalRepresentation(id, position, name);
     }
 
@@ -17,37 +21,44 @@ export default class ElementGUI {
         mainElement.className = `element`;
         mainElement.style.zIndex = this.layer;
         mainElement.id = id;
-        mainElement.style.position = "absolute";
+        // mainElement.style.position = "absolute";
         mainElement.style.transform =
-          `translate(${position.x}px, ${position.y}px)`;
-    
+            `translate(${position.x}px, ${position.y}px)`;
+        mainElement.onclick = () => {
+            this.isSelected = !this.isSelected;
+            if (this.isSelected) {
+                mainElement.classList.add("selected");
+            } else {
+                mainElement.classList.remove("selected");
+            }
+            this.onSelect();
+        }
+
         let inputDiv = document.createElement("div");
         inputDiv.className = `elementInput`;
-    
+
         let inputName = document.createElement("input");
         inputName.type = "text"
         inputName.className = `elementInput input`
         inputName.value = name
         inputName.oninput = () => {
-          this.setName(inputName.value);
-          this.updateJSON();
+            this.setName(inputName.value);
         }
         inputName.ondblclick = () => {
-          event.stopPropagation();
+            event.stopPropagation();
         }
-    
+
         let arrayInputControl = document.createElement("div");
         arrayInputControl.style.display = "flex"
         arrayInputControl.style.flexDirection = "column"
         arrayInputControl.style.gap = "0";
-        arrayInputControl.style.width = "50px";
-    
+        arrayInputControl.style.minWidth = "50px";
+
         let inputArrray = document.createElement("input");
         inputArrray.type = "checkbox"
         inputArrray.oninput = () => {
-          this.isArray = inputArrray.checked;
-          this.updateJSON();
-          this.updateElementData();
+            this.element.setIsArray(inputArrray.checked);
+            this.onChange();
         }
         let label = document.createElement("span");
         label.style.fontWeight = "100"
@@ -55,24 +66,74 @@ export default class ElementGUI {
         label.innerHTML = "is array"
         arrayInputControl.appendChild(inputArrray);
         arrayInputControl.appendChild(label);
-    
+
         inputDiv.appendChild(inputName);
         inputDiv.appendChild(arrayInputControl);
-    
+
         let drop = document.createElement("div");
         drop.className = `element drop`;
         drop.id = this.id + "-drop";
-    
+
         mainElement.appendChild(inputDiv);
         mainElement.appendChild(drop);
-      }
 
-      setName(name) {
+        // InteractiveSettings.setDraggable(id, this.position, this.children);
+        // InteractiveSettings.setResizable(id);
+        // InteractiveSettings.setDropzone(id, null);
+
+        return mainElement;
+    }
+
+    getId() {
+        return this.id;
+    }
+
+    getElementGraphical() {
+        return this.gui;
+    }
+
+    addChildren(child) {
+        const childElement = child.getElement();
+        this.element.addChild(childElement);
+        this.gui.appendChild(child)
+        this.onChange();
+    }
+
+    deleteChild(child) {
+        const childElement = child.getElement();
+        this.element.removeChild(childElement);
+        this.gui.deleteChild(child);
+        this.onChange();
+    }
+
+    setName(name) {
         this.name = name;
-      }
+        this.element.setName(name);
+        this.onChange();
+    }
 
-      setPosition(position) {
+    setPosition(position) {
         this.position = position;
-      }
+    }
 
+    getElement() {
+        return this.element;
+    }
+
+    setSelected(selected) {
+        this.gui.classList.remove("selected");
+        this.isSelected = selected;
+    }
+
+    setOnSelect(onSelect) {
+        this.onSelect = onSelect;
+    }
+
+    setOnChange(onChange){
+        this.onChange = onChange;
+    }
+
+    getJSON() {
+        return this.element.getJSON();
+    }
 }

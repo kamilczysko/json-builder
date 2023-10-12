@@ -1,17 +1,16 @@
-import Element from "element"
+import ElementGUI from "elementGUI";
 import "interact"
+import * as InteractiveSettings from "interactivesettings"
 
 export default class Schema {
   constructor() {
     this.elements = new Map();
     this.selectedElementId = null;
-    this.actualId = 0;
-
-    this.setMainContainer((childId) => this.evictChild(childId));
+    this.currentId = 0;
   }
 
   createSchemaFromJSON(text) {
-    try{
+    try {
       const json = JSON.parse(text);
       const map = new Map(Object.entries(json));
       document.getElementById("textarea").value = JSON.stringify(json, null, 5)
@@ -20,150 +19,36 @@ export default class Schema {
     }
   }
 
-  getMainElement() {
-    return this.elements.get("element-0"); //todo change
-  }
-
-  hasElements() {
-    return this.elements.size > 0
-  }
-
-  getSelectedElement() {
-    return this.elements.get(this.selectedElementId);
-  }
-
-  setMainContainer(evictChild) {
-    interact("#schemaContainer").dropzone({
-      ondrop: (event) => {
-        evictChild(event.relatedTarget.id);
-      }
-    })
-  }
-
-  getElements() {
-    return this.elements;
-  }
-
-  addElement(position, parent, children, isArray) {
-    const newId = "element-" + this.actualId;
-    const element = new Element(newId, position, parent, children, isArray, (parentId, childId) => this.setRelation(parentId, childId), () => this.updateJSON(), () => this.updateElementTypeData());
+  addElement() {
+    const newId = "element-" + this.currentId;
+    const element = new ElementGUI(newId, newId, { x: 0, y: 0 });
+    element.setOnSelect(() => this.selectElement(newId));
+    element.setOnChange(() => this.updateJSON());
+    if (this.currentId == 0) { //todo set primary first element with lowest layer or if even layers with more children
+      element.getElement().setPrimary(true);
+    }
     this.elements.set(newId, element);
-    element.addElementToView();
-    element.onClick(() => this.selectElement(newId))
-    this.actualId++;
+
+    document.getElementById("schemaContainer").appendChild(element.getElementGraphical());
+
+    this.currentId++;
     this.updateJSON();
-  }
-
-
-  addCopiedElement(element) {
-    const newId = "element-" + this.actualId;
-    const newPos = element.getPosition();
-    newPos.x += 100;
-    
-    const copiedElement = 
-    new Element(newId, newPos, element.getParent(),null, element.isArray, 
-      (parentId, childId) => this.setRelation(parentId, childId), () => this.updateJSON(), () => this.updateElementTypeData());
-    copiedElement.setName(element.getName() + "-copy")
-    copiedElement.setLayer(element.getLayer());
-    copiedElement.setAttributes(new Map(element.getAttributes()))
-    copiedElement.setList(element.getList().slice())
-    this.elements.set(newId, copiedElement);
-    copiedElement.addElementToView()
-    copiedElement.onClick(() => this.selectElement(newId))
-    this.actualId++;
-    this.updateJSON();
-    this.updateElementTypeData();
-  }
-
-  deleteSelectedElement() {
-    if (this.selectedElementId == null) {
-      return;
-    }
-    this.elements.get(this.selectedElementId).delete();
-    this.elements.delete(this.selectedElementId);
-    this.selectedElementId = null;
-  }
-
-  setRelation(parentId, childId) {
-    if (this.relationExistsAlready(parentId, childId)) {
-      return;
-    }
-    this.removeFromPreviousParent(childId);
-
-    this.elements.get(parentId).addChild(this.elements.get(childId))
-    this.elements.get(childId).setParent(this.elements.get(parentId))
-  }
-
-  removeFromPreviousParent(childId) {
-    const previousParent = this.elements.get(childId).parent;
-    if (previousParent) {
-      this.elements.get(previousParent.id).evictChild(childId);
-    }
-  }
-
-  evictChild(childId) {
-    const parent = this.elements.get(childId).parent
-    if (parent == null) {
-      return;
-    }
-    parent.evictChild(childId);
-    this.elements.get(childId).setParent(null);
-  }
-
-  relationExistsAlready(parentId, childId) {
-    const childWithId = this.elements.get(parentId).children.filter(element => element.id == childId).length
-    const isParent = this.elements.get(parentId).isParent(childId);
-    return childWithId > 0 || isParent
   }
 
   selectElement(id) {
-    this.selectedElementId = null;
-    this.elements.forEach((element, key) => {
-      element.select(false);
-      if (key == id) {
-        this.selectedElementId = id;
-        element.select(true);
-        document.getElementById("addAttribute").style.display = "block"
-        document.getElementById("attributes").innerHTML = null;
-        this.updateElementTypeData()
+    Array.from(this.elements.values()).forEach(element => {
+      if (element.getId() != id) {
+        element.setSelected(false);
       }
     })
   }
 
-  updateElementTypeData() {
-    const actualElement = this.elements.get(this.selectedElementId);
-    document.getElementById("attributes").innerHTML = null;
-    if (actualElement.isArray) {
-      this.setListOnView(this.selectedElementId);
-      document.getElementById("addAttribute").onclick = () => {
-        actualElement.addToList("")
-        this.addListToView(actualElement, "", actualElement.getList().length-1);
-        this.updateJSON();
-      };
-    } else {
-      this.setAttributesOnView(this.selectedElementId);
-      document.getElementById("addAttribute").onclick = () => {
-        this.addAttributesToView(actualElement, "", "");
-        this.updateJSON();
-      };
+  getMainElement() {
+    const primaryItems = Array.from(this.elements.values()).filter(element => element.getElement().getIsPrimary())
+    if (primaryItems.length > 0) {
+      return primaryItems[0]
     }
-
-  }
-
-  setListOnView(elementId) {
-    const element = this.elements.get(elementId);
-    const attributes = element.getList();
-    attributes.forEach((value, index) => {
-      this.addListToView(element, value, index);
-    })
-  }
-
-  setAttributesOnView(elementId) {
-    const element = this.elements.get(elementId);
-    const attributes = element.getAttributes();
-    attributes.forEach((value, key) => {
-      this.addAttributesToView(element, key, value);
-    })
+    return null;
   }
 
   addAttributesToView(element, key, value) {
@@ -232,6 +117,11 @@ export default class Schema {
   }
 
   updateJSON() {
-    document.getElementById("textarea").value = JSON.stringify(JSON.parse("{" + this.getMainElement().getJSON() + "}"), null, 5);
+    const mainElement = this.getMainElement()
+    let json = null
+    if (mainElement) {
+      json = JSON.stringify(JSON.parse("{" + mainElement.getElement().getJSON() + "}"), null, 5)
+    }
+    document.getElementById("textarea").value = json;
   }
 }

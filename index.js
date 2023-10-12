@@ -28,15 +28,15 @@ document.getElementById("textarea").oninput = () => {
 }
 let savedElement = null;
 
-document.body.onkeydown = (ev) => {
-    ev = ev || window.event; 
-    var key = ev.which || ev.keyCode;
+// document.body.onkeydown = (ev) => {
+//     ev = ev || window.event; 
+//     var key = ev.which || ev.keyCode;
     
-    //todo FIX WITH CTRL
-    if (key == 86) {
-        schema.addCopiedElement(savedElement);
-    }
-    else if (key == 67) {
-        savedElement = schema.getSelectedElement();
-    }
-}
+//     //todo FIX WITH CTRL
+//     if (key == 86) {
+//         schema.addCopiedElement(savedElement);
+//     }
+//     else if (key == 67) {
+//         savedElement = schema.getSelectedElement();
+//     }
+// }

@@ -82,7 +82,8 @@ export default class Element {
     this.list.push(data);
   }
 
-  removeFromList(index) {
+  removeFromList(item) {
+    const index = this.list.indexOf(item);
     this.list = this.list.splice(index);
   }
 

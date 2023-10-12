@@ -6,6 +6,7 @@ export default class Schema {
     this.elements = new Map();
     this.selectedElementId = null;
     this.currentId = 0;
+    this.setMainContainer();
   }
 
   createSchemaFromJSON(text) {
@@ -17,13 +18,24 @@ export default class Schema {
     }
   }
 
+  setMainContainer() {
+    interact("#schemaContainer").dropzone({
+      ondrop: (event) => {
+        const toRemove = this.elements.get(event.relatedTarget.id);
+        if (toRemove.getElement().getParent()) {
+          const parentId = toRemove.getElement().getParent().getId();
+          this.elements.get(parentId).deleteChild(toRemove);
+        }
+      }
+    })
+  }
+
   addElement() {
     const newId = "element-" + this.currentId;
     const element = new ElementGUI(newId, newId, { x: 0, y: 0 });
     element.setOnSelect(() => this.selectElement(newId));
     element.setOnChange(() => {
       this.updateJSON();
-      this.reloadList();
     });
     element.setChildProvider((childId) => this.getChildElement(childId))
 
@@ -49,8 +61,8 @@ export default class Schema {
       }
     })
     this.selectedElementId = id;
-    this.addAttributesToView(this.elements.get(id), "asdf", "weffe");
-    // this.addListToView();
+    document.getElementById("addAttribute").style.display = "block"
+    this.updateElementTypeData();
   }
 
   getMainElement() {
@@ -60,6 +72,40 @@ export default class Schema {
     }
     return null;
   }
+
+  updateElementTypeData() {
+    const actualElement = this.elements.get(this.selectedElementId);
+    document.getElementById("attributes").innerHTML = null;
+    if (actualElement.getElement().isArray) {
+      this.setListOnView(this.selectedElementId);
+      document.getElementById("addAttribute").onclick = () => {
+        actualElement.addToList("")
+        this.addListToView(actualElement, "", actualElement.getElement().getList().length - 1);
+      };
+    } else {
+      this.setAttributesOnView(this.selectedElementId);
+      document.getElementById("addAttribute").onclick = () => {
+        this.addAttributesToView(actualElement, "", "");
+      };
+    }
+  }
+
+  setListOnView(elementId) {
+    const element = this.elements.get(elementId).getElement();
+    const attributes = element.getList();
+    attributes.forEach((value, index) => {
+      this.addListToView(element, value, index);
+    })
+  }
+
+  setAttributesOnView(elementId) {
+    const element = this.elements.get(elementId);
+    const attributes = element.getElement().getAttributes();
+    attributes.forEach((value, key) => {
+      this.addAttributesToView(element, key, value);
+    })
+  }
+
 
   addAttributesToView(element, key, value) {
     const attribute = document.createElement("div");
@@ -75,7 +121,7 @@ export default class Schema {
     valueInput.type = "text";
     valueInput.value = value;
     valueInput.oninput = () => {
-      element.addAttribute(keyInput.value, valueInput.value);
+      element.setAttribute(keyInput.value, valueInput.value);
     }
     const removeButton = document.createElement("button");
     removeButton.innerText = "remove";
@@ -101,8 +147,7 @@ export default class Schema {
     valueInput.type = "text";
     valueInput.value = value;
     valueInput.oninput = () => {
-      element.changeOnList(valueInput.value, index);
-      this.updateJSON();
+      element.editInList(valueInput.value, index);
     }
     const removeButton = document.createElement("button");
     removeButton.innerText = "remove";
@@ -110,7 +155,6 @@ export default class Schema {
       element.removeFromList(valueInput.value);
       document.getElementById("attributes").removeChild(attribute);
       this.reloadList();
-      this.updateJSON();
     }
 
     attribute.appendChild(valueLabel);
@@ -121,7 +165,7 @@ export default class Schema {
 
   reloadList() {
     document.getElementById("attributes").innerHTML = null;
-    // this.setListOnView(this.selectedElementId);
+    this.setListOnView(this.selectedElementId);
   }
 
   updateJSON() {

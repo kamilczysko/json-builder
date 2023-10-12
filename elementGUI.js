@@ -22,7 +22,7 @@ export default class ElementGUI {
         mainElement.className = `element`;
         mainElement.style.zIndex = this.layer;
         mainElement.id = id;
-        // mainElement.style.position = "absolute";
+        mainElement.style.position = "absolute";
         mainElement.style.transform =
             `translate(${position.x}px, ${position.y}px)`;
         mainElement.onclick = () => {
@@ -58,7 +58,7 @@ export default class ElementGUI {
         let inputArrray = document.createElement("input");
         inputArrray.type = "checkbox"
         inputArrray.oninput = () => {
-            this.element.setIsArray(inputArrray.checked);
+            this.element.setIsArray(inputArrray.checked == true);
             this.onChange();
         }
         let label = document.createElement("span");
@@ -104,8 +104,9 @@ export default class ElementGUI {
     }
 
     deleteChild(child) {
-        this.element.removeChild(child.getElement());
-        this.gui.deleteChild(child.getElementGraphical());
+        this.element.removeChild(child.getElement().getId());
+        this.gui.removeChild(child.getElementGraphical());
+        document.getElementById("schemaContainer").appendChild(child.getElementGraphical())
         this.onChange();
     }
 
@@ -144,8 +145,23 @@ export default class ElementGUI {
         return this.element.getJSON();
     }
     
-    addAttribute(key, value) {
+    setAttribute(key, value) {
         this.element.setAttribute(key, value);
+        this.onChange();
+    }
+
+    addToList(item) {
+        this.element.addToList(item);
+        this.onChange();
+    }
+
+    removeFromList(item){
+        this.element.removeFromList(item);
+        this.onChange();
+    }
+
+    editInList(item, index){
+        this.element.editInList(item, index);
         this.onChange();
     }
 

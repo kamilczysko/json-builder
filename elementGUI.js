@@ -6,17 +6,18 @@ export default class ElementGUI {
         this.id = id;
         this.name = name;
         this.position = position;
-        this.isSelected = true;
+        this.isSelected = false;
         this.element = new Element(id);
         this.element.setName(name);
 
         this.onChange = null;
         this.onSelect = null;
         this.provideChild = null;
+        this.generateChild = null
 
         const graphicsElements = this.initGraphicalRepresentation(id, position, name);
-        this.gui = graphicsElements.main;
-        this.drop = graphicsElements.drop;
+        this.guiElement = graphicsElements.main;
+        this.guiElementContainer = graphicsElements.elementContainer;
     }
 
     initGraphicalRepresentation(id, position, name) {
@@ -24,10 +25,14 @@ export default class ElementGUI {
         mainElement.className = `element`;
         mainElement.style.zIndex = this.layer;
         mainElement.id = id;
-        // mainElement.style.position = "absolute";
-        mainElement.style.transform =
-            `translate(${position.x}px, ${position.y}px)`;
+        if (position) {
+            mainElement.style.transform =
+                `translate(${position.x}px, ${position.y}px)`;
+        }
         mainElement.onclick = () => {
+            if (this.isSelected) {
+                return;
+            }
             this.isSelected = !this.isSelected;
             if (this.isSelected) {
                 mainElement.classList.add("selected");
@@ -68,7 +73,7 @@ export default class ElementGUI {
         let isArrayCheckbox = document.createElement("input");
         isArrayCheckbox.type = "checkbox"
         isArrayCheckbox.oninput = () => {
-            this.element.setIsArray(inputArrray.checked == true);
+            this.element.setIsArray(isArrayCheckbox.checked == true);
             this.onChange();
         }
         let label = document.createElement("span");
@@ -76,7 +81,7 @@ export default class ElementGUI {
 
         checkbox.appendChild(isArrayCheckbox);
         checkbox.appendChild(label);
-        
+
         topPanel.appendChild(nameContainer);
         topPanel.appendChild(checkbox);
 
@@ -85,18 +90,22 @@ export default class ElementGUI {
 
         let addButton = document.createElement("button");
         addButton.innerText = "add";
+        addButton.onclick = () => {
+            const newChild = this.generateChild();
+            this.addChild(newChild);
+        }
         let copyButton = document.createElement("button");
         copyButton.innerText = "copy";
         let removeButton = document.createElement("button");
         removeButton.innerText = "remove";
-        
+
         buttonPanel.appendChild(addButton);
         buttonPanel.appendChild(copyButton);
         buttonPanel.appendChild(removeButton);
 
         elementHeader.appendChild(topPanel);
         elementHeader.appendChild(buttonPanel);
-        
+
         let elementContainer = document.createElement("div");
         elementContainer.className = `element-container`;
         elementContainer.id = this.id + "-drop";
@@ -113,7 +122,7 @@ export default class ElementGUI {
             this.onChange();
         });
 
-        return { main: mainElement, drop: elementContainer };
+        return { main: mainElement, elementContainer: elementContainer };
     }
 
     getId() {
@@ -121,23 +130,23 @@ export default class ElementGUI {
     }
 
     getElementGraphical() {
-        return this.gui;
+        return this.guiElement;
     }
 
     addChild(child) {
         this.element.addChild(child.getElement());
-        this.drop.appendChild(child.getElementGraphical())
+        this.guiElementContainer.appendChild(child.getElementGraphical())
         child.getElementGraphical().style.position = "block"
-        this.drop.classList.add("parent")
+        this.guiElement.classList.add("parent")
         this.onChange();
     }
 
     deleteChild(child) {
         this.element.removeChild(child.getElement().getId());
         if (this.element.hasChildren()) {
-            this.drop.classList.remove("parent")
+            this.guiElementContainer.classList.remove("parent")
         }
-        this.gui.removeChild(child.getElementGraphical());
+        this.guiElementContainer.removeChild(child.getElementGraphical());
         document.getElementById("schemaContainer").appendChild(child.getElementGraphical())
         this.onChange();
     }
@@ -157,7 +166,7 @@ export default class ElementGUI {
     }
 
     setSelected(selected) {
-        this.gui.classList.remove("selected");
+        this.guiElement.classList.remove("selected");
         this.isSelected = selected;
     }
 
@@ -171,6 +180,10 @@ export default class ElementGUI {
 
     setChildProvider(provideChild) {
         this.provideChild = provideChild;
+    }
+
+    setOnAddChild(generateChild) {
+        this.generateChild = generateChild;
     }
 
     getJSON() {

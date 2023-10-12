@@ -30,6 +30,23 @@ export default class Schema {
     })
   }
 
+  addElementToParent() {
+    const newId = "element-" + this.currentId;
+    const element = new ElementGUI(newId, newId, {x:0, y:0});
+    element.setOnSelect(() => this.selectElement(newId));
+    element.setOnChange(() => {
+      this.updateJSON();
+    });
+    element.setChildProvider((childId) => this.getChildElement(childId))
+
+    if (this.currentId == 0) { //todo set primary first element with lowest layer or if even layers with more children
+      element.getElement().setPrimary(true);
+    }
+    this.elements.set(newId, element);
+    this.currentId++;
+    return element;
+  }
+
   addElement(position) {
     const newId = "element-" + this.currentId;
     const element = new ElementGUI(newId, newId, position);
@@ -38,6 +55,7 @@ export default class Schema {
       this.updateJSON();
     });
     element.setChildProvider((childId) => this.getChildElement(childId))
+    element.setOnAddChild(() => this.addElementToParent());
 
     if (this.currentId == 0) { //todo set primary first element with lowest layer or if even layers with more children
       element.getElement().setPrimary(true);
@@ -136,7 +154,7 @@ export default class Schema {
     document.getElementById("attributes").appendChild(attribute);
   }
 
-  addListToView(element, value, index) { 
+  addListToView(element, value, index) {
     const attribute = document.createElement("div");
     attribute.classList.add("attribute");
     const valueLabel = document.createElement("span");

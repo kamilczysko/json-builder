@@ -88,7 +88,7 @@ export function setDropzone(id, assignChild) {
     interact("#" + id).dropzone({
         ondrop: (event) => {
             assignChild(event.relatedTarget.id);
-
+            document.getElementById(event.relatedTarget.id).style = null
             let dropzoneElement = document.getElementById(id + "-drop");
             dropzoneElement.classList.remove('above')
         },

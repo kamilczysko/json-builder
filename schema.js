@@ -30,9 +30,9 @@ export default class Schema {
     })
   }
 
-  addElement() {
+  addElement(position) {
     const newId = "element-" + this.currentId;
-    const element = new ElementGUI(newId, newId, { x: 0, y: 0 });
+    const element = new ElementGUI(newId, newId, position);
     element.setOnSelect(() => this.selectElement(newId));
     element.setOnChange(() => {
       this.updateJSON();

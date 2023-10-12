@@ -14,7 +14,9 @@ export default class ElementGUI {
         this.onSelect = null;
         this.provideChild = null;
 
-        this.gui = this.initGraphicalRepresentation(id, position, name);
+        const graphicsElements = this.initGraphicalRepresentation(id, position, name);
+        this.gui = graphicsElements.main;
+        this.drop = graphicsElements.drop;
     }
 
     initGraphicalRepresentation(id, position, name) {
@@ -22,7 +24,7 @@ export default class ElementGUI {
         mainElement.className = `element`;
         mainElement.style.zIndex = this.layer;
         mainElement.id = id;
-        mainElement.style.position = "absolute";
+        // mainElement.style.position = "absolute";
         mainElement.style.transform =
             `translate(${position.x}px, ${position.y}px)`;
         mainElement.onclick = () => {
@@ -83,10 +85,11 @@ export default class ElementGUI {
         InteractiveSettings.setDropzone(id, (childId) => {
             const child = this.provideChild(childId);
             this.addChild(child);
+            child.getElementGraphical().style.position = "relative";
             this.onChange();
         });
 
-        return mainElement;
+        return { main: mainElement, drop: drop };
     }
 
     getId() {
@@ -99,12 +102,17 @@ export default class ElementGUI {
 
     addChild(child) {
         this.element.addChild(child.getElement());
-        this.gui.appendChild(child.getElementGraphical())
+        this.drop.appendChild(child.getElementGraphical())
+        child.getElementGraphical().style.position = "block"
+        this.drop.classList.add("parent")
         this.onChange();
     }
 
     deleteChild(child) {
         this.element.removeChild(child.getElement().getId());
+        if (this.element.hasChildren()) {
+            this.drop.classList.remove("parent")
+        }
         this.gui.removeChild(child.getElementGraphical());
         document.getElementById("schemaContainer").appendChild(child.getElementGraphical())
         this.onChange();
@@ -133,7 +141,7 @@ export default class ElementGUI {
         this.onSelect = onSelect;
     }
 
-    setOnChange(onChange){
+    setOnChange(onChange) {
         this.onChange = onChange;
     }
 
@@ -144,7 +152,7 @@ export default class ElementGUI {
     getJSON() {
         return this.element.getJSON();
     }
-    
+
     setAttribute(key, value) {
         this.element.setAttribute(key, value);
         this.onChange();
@@ -155,12 +163,12 @@ export default class ElementGUI {
         this.onChange();
     }
 
-    removeFromList(value){
+    removeFromList(value) {
         this.element.removeFromList(value);
         this.onChange();
     }
 
-    editInList(value, index){
+    editInList(value, index) {
         this.element.editInList(index, value);
         this.onChange();
     }

@@ -99,6 +99,10 @@ export default class Element {
     this.isArray = isArray;
   }
 
+  hasChildren() {
+    return this.children.size > 0;
+  }
+
   getJSON() {
     if (this.isArray) {
       let result = "";

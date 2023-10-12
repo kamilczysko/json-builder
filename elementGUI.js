@@ -143,4 +143,14 @@ export default class ElementGUI {
     getJSON() {
         return this.element.getJSON();
     }
+    
+    addAttribute(key, value) {
+        this.element.setAttribute(key, value);
+        this.onChange();
+    }
+
+    deleteAttribute(key) {
+        this.element.deleteAttribute(key);
+        this.onChange();
+    }
 }

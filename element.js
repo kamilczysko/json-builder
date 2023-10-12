@@ -132,13 +132,12 @@ export default class Element {
     }
   }
 
-  getJSONAsArrayItem() {
+  getJSONAsArrayItem() { //return as json 
     if (this.getAttributesJSON() == null && this.getChildrenJSON() == null) {
       return "null";
     }
     let attrs = this.getAttributesJSON() != null ? this.getAttributesJSON() : ""
     let childs = this.getChildrenJSON() != null ? ", " + this.getChildrenJSON() : ""
-    console.log("childs:" + childs)
     return "{" +
       attrs +
       childs +

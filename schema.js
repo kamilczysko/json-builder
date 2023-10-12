@@ -49,7 +49,7 @@ export default class Schema {
       }
     })
     this.selectedElementId = id;
-    // this.addAttributesToView();
+    this.addAttributesToView(this.elements.get(id), "asdf", "weffe");
     // this.addListToView();
   }
 
@@ -76,14 +76,12 @@ export default class Schema {
     valueInput.value = value;
     valueInput.oninput = () => {
       element.addAttribute(keyInput.value, valueInput.value);
-      this.updateJSON();
     }
     const removeButton = document.createElement("button");
     removeButton.innerText = "remove";
     removeButton.onclick = () => {
       element.removeAttribute(keyInput.value);
       document.getElementById("attributes").removeChild(attribute);
-      this.updateJSON();
     }
 
     attribute.appendChild(keyLabel);

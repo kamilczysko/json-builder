@@ -78,6 +78,7 @@ export default class ElementGUI {
         isArrayCheckbox.oninput = () => {
             this.element.setIsArray(isArrayCheckbox.checked == true);
             this.typeChangeEvent();
+            this.onChange();
         }
         let label = document.createElement("span");
         label.innerText = "is array"
@@ -107,8 +108,10 @@ export default class ElementGUI {
             } else {
                 document.getElementById("schemaContainer").removeChild(this.getElementGraphical())
             }
-            this.element = null;
-            this.children = [];
+            this.element.getChildren().forEach(element => {
+                element.removeElement();
+            });
+            // this.element = null;
             this.onChange();
         }
 
@@ -163,6 +166,15 @@ export default class ElementGUI {
         }
         this.guiElementContainer.removeChild(child.getElementGraphical());
         document.getElementById("schemaContainer").appendChild(child.getElementGraphical())
+        this.onChange();
+    }
+
+    removePermament(child) {
+        this.element.removeChild(child.getElement().getId());
+        if (this.element.hasChildren()) {
+            this.guiElementContainer.classList.remove("parent")
+        }
+        this.guiElementContainer.removeChild(child.getElementGraphical());
         this.onChange();
     }
 

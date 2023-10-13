@@ -225,7 +225,7 @@ export default class Schema {
     const elementToRemove = this.elements.get(id);
     if (elementToRemove.getElement().getParent()) {
       const parent = this.elements.get(elementToRemove.getElement().getParent().getId());
-      parent.deleteChild(elementToRemove);
+      parent.removePermament(elementToRemove);
     }
     this.elements.delete(id);
     this.selectedElementId = null;

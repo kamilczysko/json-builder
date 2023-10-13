@@ -1,6 +1,8 @@
 - poprawić dodawanie dzieci
-- dorobić usuwanie elementów == todo test
+- dorobić usuwanie elementów == todo test == dorobic rekurencje == czyścić liste
 - dodać kopiowanie elementów
 - poprawić style dla przycisków
 - poprawić stylowanie dla arybutów i list zeby sie z jsonem nie zaslanialy
 - wyznaczanie podstawowego klocka
+- poprawić cały widok, z przesuwnymi okienkami
+- generowanie list json z obiektami

@@ -18,6 +18,10 @@ export default class Element {
     child.setLayer(this.layer + 1);
   }
 
+  getChildren() {
+    return this.children;
+  }
+
   setParent(parent) {
     if (this.parent && this.parent.getId() != parent.getId()) {
       this.parent.removeChild(this.id);
@@ -101,6 +105,13 @@ export default class Element {
 
   hasChildren() {
     return this.children.size > 0;
+  }
+
+  removeElement() {
+    this.parent.removeChild(this.id);
+    this.children.forEach(e => {
+      e.removeElement();
+    })
   }
 
   getJSON() {

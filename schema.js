@@ -30,7 +30,7 @@ export default class Schema {
     })
   }
 
-  addElementToParent(parentId) {
+  addElementToParent(parentId) { // merge with methodd below
     const newId = "element-" + this.currentId;
     const element = new ElementGUI(newId, newId, { x: 0, y: 0 });
     element.setOnSelect(() => this.selectElement(newId));
@@ -43,7 +43,7 @@ export default class Schema {
     element.setOnAddChild((parentId) => this.addElementToParent(parentId));
     element.setOnDelete(() => this.removeElement(element.getId()))
 
-    if (this.currentId == 0) { //todo set primary first element with lowest layer or if even layers with more children
+    if (this.currentId == 0 || this.elements.length == 0) { //todo set primary first element with lowest layer or if even layers with more children
       element.getElement().setPrimary(true);
     }
     this.elements.set(newId, element);
@@ -58,14 +58,13 @@ export default class Schema {
     element.setOnSelect(() => this.selectElement(newId));
     element.setOnChange(() => {
       this.updateJSON();
-      // this.updateElementTypeData();
     });
     element.setOnTypeChange(() => this.updateElementTypeData());
     element.setChildProvider((childId) => this.getChildElement(childId));
     element.setOnAddChild((parentId) => this.addElementToParent(parentId));
     element.setOnDelete(() => this.removeElement(element.getId()))
 
-    if (this.currentId == 0) { //todo set primary first element with lowest layer or if even layers with more children
+    if (this.currentId == 0 || this.elements.length == 0) { //todo set primary first element with lowest layer or if even layers with more children
       element.getElement().setPrimary(true);
     }
     this.elements.set(newId, element);

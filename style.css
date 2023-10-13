@@ -28,6 +28,7 @@ body{
     display: flex;
     flex-direction: column;
 }
+
 .element-header .name {
     display: flex;
     align-items: center;
@@ -64,12 +65,10 @@ body{
     border: none;
     background: none;
     border: none;
-    right: 5px;
-    top: 0px;
     cursor: pointer;
-    width: 100px;
-    height: 40px;
-    
+    border: 1px solid black;
+    border-radius: 7px;
+    padding: 1px 3px;
 }
 
 .element-header button:hover{
@@ -89,7 +88,8 @@ body{
     width: 100%;
     display: flex;
     align-content: center;
-    justify-content: space-between;
+    justify-content: start;
+    gap: 10px;
 }
 
 .button-panel button:hover {

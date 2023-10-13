@@ -2,7 +2,7 @@ import Element from "element"
 import * as InteractiveSettings from "interactivesettings"
 
 export default class ElementGUI {
-    constructor(id, name, position) {
+    constructor(id, name, position = { x: 0, y: 0 }) {
         this.id = id;
         this.name = name;
         this.position = position;
@@ -16,6 +16,9 @@ export default class ElementGUI {
         this.generateChild = null;
         this.typeChangeEvent = null;
         this.removeElement = null;
+        this.onCopy = null;
+        this.globalId = null;
+        this.parentProvider = null;
 
         const graphicsElements = this.initGraphicalRepresentation(id, position, name);
         this.guiElement = graphicsElements.main;
@@ -98,9 +101,14 @@ export default class ElementGUI {
         addButton.onclick = () => {
             this.generateChild(this.id);
         }
-        
+
         let copyButton = document.createElement("button");
         copyButton.innerText = "copy";
+        copyButton.onclick = () => {
+            const cloned = this.clone(this.globalId());
+            const parentId = this.element.getParent().getId();
+            this.parentProvider(parentId).addChild(cloned);
+        }
         let removeButton = document.createElement("button");
         removeButton.innerText = "X";
         removeButton.classList.add("removeButton")
@@ -118,10 +126,9 @@ export default class ElementGUI {
         }
 
         buttonPanel.appendChild(addButton);
-        buttonPanel.appendChild(removeButton);
-        console.log("isPrimary: "+this.element.getIsPrimary())
         buttonPanel.appendChild(copyButton);
-        
+        buttonPanel.appendChild(removeButton);
+
         elementHeader.appendChild(topPanel);
         elementHeader.appendChild(buttonPanel);
 
@@ -197,8 +204,7 @@ export default class ElementGUI {
     }
 
     setPrimary(primary) {
-        console.log("proiamry: "+primary)
-        if(primary) {
+        if (primary) {
             this.copyButton.style.display = "none"
         }
         this.element.setPrimary(primary);
@@ -233,6 +239,18 @@ export default class ElementGUI {
         this.removeElement = onRemove;
     }
 
+    setOnCopy(onCopy) {
+        this.onCopy = onCopy;
+    }
+
+    setGlobalId(globalId) {
+        this.globalId = globalId;
+    }
+
+    setParentProvider(provider) {
+        this.parentProvider = provider;
+    }
+
     getJSON() {
         return this.element.getJSON();
     }
@@ -260,5 +278,38 @@ export default class ElementGUI {
     deleteAttribute(key) {
         this.element.deleteAttribute(key);
         this.onChange();
+    }
+
+    clone() {
+        let tmpIDX = this.globalId();
+        const newId = "element_" + tmpIDX
+        const copied = new ElementGUI(newId, this.name + "-copy-" + tmpIDX, null);
+
+        copied.getElement().setList(this.element.getList());
+        copied.getElement().setAttributes(this.element.getAttributes());
+        copied.getElement().setParent(this.element.getParent())
+        copied.getElement().setIsArray(this.element.isArray)
+
+        copied.setOnChange(this.onChange);
+        copied.setOnAddChild(this.generateChild);
+        copied.setOnDelete(this.removeElement);
+        copied.setOnSelect(this.onSelect);
+        copied.setOnTypeChange(this.typeChangeEvent);
+        copied.setChildProvider(this.provideChild);
+        copied.setGlobalId(this.globalId);
+        copied.setOnCopy(this.onCopy);
+        copied.setParentProvider(this.parentProvider);
+
+        this.onCopy(newId, copied);
+        if (this.element.hasChildren()) {
+            this.element.getChildren().values().forEach(child => {
+                const clonedChild = this.parentProvider(child.getId()).clone();
+                copied.addChild(clonedChild);
+            })
+        }
+
+        this.onChange();
+
+        return copied;
     }
 }

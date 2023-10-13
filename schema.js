@@ -40,7 +40,19 @@ export default class Schema {
     element.setOnTypeChange(() => this.updateElementTypeData());
     element.setChildProvider((childId) => this.getChildElement(childId));
     element.setOnAddChild((parentId) => this.addElementToParent(parentId));
-    element.setOnDelete(() => this.removeElement(element.getId()))
+    element.setOnDelete(() => this.removeElement(element.getId()));
+    element.setOnCopy((id, element) => {
+      console.log("copy: ")
+      console.log(element)
+      this.elements.set(id, element);
+    });
+    element.setGlobalId(() => {
+      const newId = this.currentId;
+      this.currentId ++;
+      return newId;
+    })
+
+    element.setParentProvider((id) => {return this.elements.get(id)})
 
     if (this.currentId == 0 || this.elements.length == 0) {
       element.setPrimary(true);
@@ -50,10 +62,9 @@ export default class Schema {
     return element;
   }
 
-  addElementToParent(parentId) { // merge with methodd below
+  addElementToParent(parentId) {
     const element = this.createElement();
     this.elements.get(parentId).addChild(element);
-    // this.currentId++;
     return element;
   }
 

@@ -148,18 +148,6 @@ export default class Element {
     }
   }
 
-  getJSONAsArrayItem() { //return as json 
-    if (this.getAttributesJSON() == null && this.getChildrenJSON() == null) {
-      return "null";
-    }
-    let attrs = this.getAttributesJSON() != null ? this.getAttributesJSON() : ""
-    let childs = this.getChildrenJSON() != null ? ", " + this.getChildrenJSON() : ""
-    return "{" +
-      attrs +
-      childs +
-      "}";
-  }
-
   getAttributesJSON() {
     if (this.attributes.size == 0) {
       return null;

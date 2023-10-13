@@ -41,7 +41,7 @@ export default class Element {
   getId() {
     return this.id;
   }
-   
+
   removeChild(id) {
     this.children.delete(id)
   }
@@ -114,64 +114,73 @@ export default class Element {
     })
   }
 
-  getJSON() {
+  getJSON(asArray = false) {
+    let namePrefix = "\"" + this.name + "\":";
+    if (asArray) {
+      namePrefix = "";
+    }
     if (this.isArray) {
-      let result = "";
-      this.list.forEach(value => {
-        if (this.isNumeric(value)) {
-          result += value + ",";
-        } else {
-          result += "\"" + value + "\",";
-        }
-      })
-      return "\"" + this.name + "\":[" + result.slice(0, -1) + "]";
-    }
-    if (this.getAttributesJSON() == null && this.getChildrenJSON() == null) {
-      return "\"" + this.name + "\": null";
-    }
-    let attrs = this.getAttributesJSON() != null ? this.getAttributesJSON() : null
-    let childs = this.getChildrenJSON() != null ? this.getChildrenJSON() : null
-    if (attrs && childs) {
-      return '"' + this.name + "\": {" +
-        attrs + "," +
-        childs +
-        "}";
-    } else if (attrs) {
-      return '"' + this.name + "\": {" +
-        attrs +
-        "}";
-    }
-    else {
-      return '"' + this.name + "\": {" +
-        childs +
-        "}";
+      if (this.list.length > 0) {
+        return "\"" + this.name + "\":[" + this.getSimpleListAsJSON() + "]";
+      }
+      return "\"" + this.name + "\":[" + this.getChildrenAsJSON(true) + "]";
+    } else {
+      const attributes = this.getAttributesAsJSON();
+      const children = this.getChildrenAsJSON()
+      if (attributes && children) {
+        return namePrefix + "{" + attributes + "," + children + "}";
+      } else if (attributes) {
+        return namePrefix + "{" + attributes + "}";
+      } else if (children) {
+        return namePrefix + "{" + children + "}";
+      }
+
+      if (asArray) {
+        return null;
+      }
+      return namePrefix + null;
     }
   }
 
-  getAttributesJSON() {
-    if (this.attributes.size == 0) {
-      return null;
-    }
-    let result = "";
-    this.attributes.forEach((val, key) => {
-      if (this.isNumeric(val)) {
-        result += "\"" + key + "\": " + "" + val + ","
+  getSimpleListAsJSON() {
+    let result = ""
+    this.list.forEach(element => {
+      if (this.isNumeric(element)) {
+        result += element + ",";
       } else {
-        result += "\"" + key + "\": " + "\"" + val + "\","
+        result += "\"" + element + "\",";
       }
     })
     return result.slice(0, -1);
   }
 
-  getChildrenJSON() {
-    if (this.children.size == 0) {
+  getAttributesAsJSON() {
+    let result = "";
+    this.getAttributes().forEach((value, key) => {
+      if (this.isNumeric(value)) {
+        result += "\"" + key + "\":" + value + ",";
+      } else {
+        result += "\"" + key + "\":\"" + value + "\",";
+      }
+    })
+    if (result == "") {
       return null;
     }
-    let res = "";
-    Array.from(this.children.values()).forEach(child => {
-      res += child.getJSON() + ",";
+    return result.slice(0, -1);
+  }
+
+  getChildrenAsJSON(asList = false) {
+    let result = "";
+
+    this.children.forEach(child => {
+      result += child.getJSON(asList) + ",";
     })
-    return res.slice(0, -1);
+
+    if (result == "") {
+      return null;
+    }
+
+    return result.slice(0, -1);
   }
 
   isNumeric(n) {

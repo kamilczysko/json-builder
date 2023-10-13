@@ -214,6 +214,7 @@ export default class Schema {
     const mainElement = this.getMainElement()
     let json = null
     if (mainElement) {
+      console.log(mainElement.getElement().getJSON())
       json = JSON.stringify(JSON.parse("{" + mainElement.getElement().getJSON() + "}"), null, 5)
     }
     document.getElementById("textarea").value = json;

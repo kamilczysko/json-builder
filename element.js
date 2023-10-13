@@ -172,7 +172,11 @@ export default class Element {
     let result = "";
 
     this.children.forEach(child => {
-      result += child.getJSON(asList) + ",";
+      if (this.isArray && asList) {
+        result += "{"+child.getJSON()+"},";
+      } else {
+        result += child.getJSON(asList) + ",";
+      }
     })
 
     if (result == "") {

@@ -1,6 +1,6 @@
 - poprawić dodawanie dzieci (dublują się przy klikaniu w kontenerek) ++ done
 - dorobić usuwanie elementów == todo test == dorobic rekurencje == czyścić liste
-- dodać kopiowanie elementów
+- dodać kopiowanie elementów +
 - poprawić style dla przycisków +
 - poprawić stylowanie dla arybutów i list zeby sie z jsonem nie zaslanialy
 - wyznaczanie podstawowego klocka+

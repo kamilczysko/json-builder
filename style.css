@@ -1,18 +1,21 @@
-body{ 
+body {
     font-family: 'Poppins', sans-serif;
     font-weight: 200;
 }
 
 .element {
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
-
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
     font-size: .8rem;
     color: black;
     background-color: rgba(169, 169, 255, .4);
     cursor: pointer;
-    max-width: 30%;
+    min-width: 15%;
+    max-width: 40%;
     border-radius: 5px;
     padding: 5px;
     box-shadow: 1px 1px 5px black;
@@ -50,7 +53,7 @@ body{
     background: rgba(255, 85, 170, 0.356);
 }
 
-.element-header .checkbox{
+.element-header .checkbox {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -71,29 +74,40 @@ body{
     padding: 1px 3px;
 }
 
-.element-header button:hover{
+.element-header button:hover {
     font-weight: 200;
     text-decoration: underline;
 }
 
-.element-header button:active{
+.element-header button:active {
     font-weight: 400;
 }
+
 .top-panel {
     width: 100%;
     display: flex;
     align-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
+
 .button-panel {
     width: 100%;
     display: flex;
-    align-content: center;
+    align-items: center;
     justify-content: start;
     gap: 10px;
 }
 
+.button-panel button {
+    height: 60%;
+    border: 1px solid black;
+}
+
 .button-panel button:hover {
-    scale: 1.2;
+    scale: 1.1;
 }
 
 .button-panel button:active {
@@ -101,10 +115,10 @@ body{
     font-weight: 300;
 }
 
-.parent { 
+.parent {
     border-radius: 15px;
     border: 3px solid black;
-    min-width: 100%;
+    max-width: 70%;
 }
 
 .element-container {
@@ -143,29 +157,45 @@ body{
     box-shadow: 1px 4px 15px rgb(255, 14, 247);
 }
 
-.removeButton {
+.remove-button {
     width: 15px !important;
-    height: 15px !important; 
-    /* position: absolute; */
-    /* top: 1px !important; */
-    /* left: 10px; */
+    height: 15px !important;
     border: 1px solid black !important;
     border-radius: 50px !important;
     display: flex;
+    /* position: absolute; */
+    right: 15px;
     align-items: center;
     justify-content: center;
 }
 
-.removeButton:hover {
+.remove-button:hover {
     background: rgba(255, 0, 0, 0.176);
 }
 
 .panel {
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
+    right: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+}
+
+.panel button {
+    cursor: pointer;
+    background: none;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.panel button:hover {
+    background: rgba(110, 31, 159, 0.547);
+}
+
+.panel button:active {
+    background: rgba(110, 31, 159, 0.798);
 }
 
 .attribute {
@@ -175,16 +205,19 @@ body{
 
 .attribute input {
     background: none;
+    border: none;
     border-bottom: 1px solid black;
     outline: none;
 
 }
+
 .schemaContainer {
     position: relative;
     width: 100%;
-    height: 90%;
+    height: 90vh;
     margin-top: 30px;
 }
+
 .schemaContainer::before {
     color: rgba(0, 0, 0, 0.291);
     font-size: 2rem;
@@ -192,20 +225,20 @@ body{
     content: "Double click to add element";
 }
 
-.rightSide {
-    display: flex;
-    flex-direction: column;
-    justify-items: center;
-    align-items: center;
-    width: 100%;
-}
-
-#addAttribute {
+#atributePanel {
     display: none;
+    margin-top: 10px;
 }
 
 .jsonContainer {
     overflow: scroll;
     resize: none;
     outline: none;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    resize: vertical;
+    overflow: scroll;
+    width: 30%;
+    text-wrap: nowrap;
 }

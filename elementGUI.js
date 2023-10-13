@@ -71,7 +71,7 @@ export default class ElementGUI {
         let nameLabel = document.createElement("span");
         nameLabel.innerText = "name: "
 
-        nameContainer.appendChild(nameLabel);
+        // nameContainer.appendChild(nameLabel);
         nameContainer.appendChild(inputName);
 
         let checkbox = document.createElement("div");
@@ -90,8 +90,9 @@ export default class ElementGUI {
         checkbox.appendChild(isArrayCheckbox);
         checkbox.appendChild(label);
 
+        
         topPanel.appendChild(nameContainer);
-        topPanel.appendChild(checkbox);
+        // topPanel.appendChild(checkbox);
 
         let buttonPanel = document.createElement("div");
         buttonPanel.className = `button-panel`;
@@ -111,7 +112,7 @@ export default class ElementGUI {
         }
         let removeButton = document.createElement("button");
         removeButton.innerText = "X";
-        removeButton.classList.add("removeButton")
+        removeButton.classList.add("remove-button")
         removeButton.onclick = () => {
             this.removeElement(this.id);
             if (this.element.getParent()) {
@@ -127,7 +128,9 @@ export default class ElementGUI {
 
         buttonPanel.appendChild(addButton);
         buttonPanel.appendChild(copyButton);
-        buttonPanel.appendChild(removeButton);
+        buttonPanel.appendChild(checkbox);
+        // buttonPanel.appendChild(removeButton);
+        topPanel.appendChild(removeButton);
 
         elementHeader.appendChild(topPanel);
         elementHeader.appendChild(buttonPanel);

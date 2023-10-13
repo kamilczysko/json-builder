@@ -85,7 +85,7 @@ export default class Schema {
       }
     })
     this.selectedElementId = id;
-    document.getElementById("addAttribute").style.display = "block"
+    document.getElementById("atributePanel").style.display = "block"
     this.updateElementTypeData();
   }
 
@@ -113,10 +113,20 @@ export default class Schema {
         actualElement.addToList("")
         this.addListToView(actualElement, "", actualElement.getElement().getList().length - 1);
       };
+      document.getElementById("clearAttributes").onclick = () => {
+        actualElement.getElement().setList([]);
+        this.updateJSON();
+        this.updateElementTypeData();
+      };
     } else {
       this.setAttributesOnView(this.selectedElementId);
       document.getElementById("addAttribute").onclick = () => {
         this.addAttributesToView(actualElement, "", "");
+      };
+      document.getElementById("clearAttributes").onclick = () => {
+        actualElement.getElement().setAttributes(new Map());
+        this.updateJSON();
+        this.updateElementTypeData();
       };
     }
   }

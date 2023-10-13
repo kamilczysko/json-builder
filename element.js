@@ -123,7 +123,12 @@ export default class Element {
       if (this.list.length > 0) {
         return "\"" + this.name + "\":[" + this.getSimpleListAsJSON() + "]";
       }
-      return "\"" + this.name + "\":[" + this.getChildrenAsJSON(true) + "]";
+      const data = this.getChildrenAsJSON(true);
+      if (data) {
+        return "\"" + this.name + "\":[" + this.getChildrenAsJSON(true) + "]";
+      } else {
+        return "\"" + this.name + "\":[]";
+      }
     } else {
       const attributes = this.getAttributesAsJSON();
       const children = this.getChildrenAsJSON()
@@ -173,7 +178,7 @@ export default class Element {
 
     this.children.forEach(child => {
       if (this.isArray && asList) {
-        result += "{"+child.getJSON()+"},";
+        result += "{" + child.getJSON() + "},";
       } else {
         result += child.getJSON(asList) + ",";
       }

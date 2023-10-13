@@ -33,17 +33,15 @@ export default class Schema {
   createElement(position={ x: 0, y: 0 }) {
     const newId = "element-" + this.currentId;
     const element = new ElementGUI(newId, newId, position);
-    element.setOnSelect(() => this.selectElement(newId));
+    element.setOnSelect((id) => this.selectElement(id));
     element.setOnChange(() => {
       this.updateJSON();
     });
     element.setOnTypeChange(() => this.updateElementTypeData());
     element.setChildProvider((childId) => this.getChildElement(childId));
     element.setOnAddChild((parentId) => this.addElementToParent(parentId));
-    element.setOnDelete(() => this.removeElement(element.getId()));
+    element.setOnDelete((id) => this.removeElement(id));
     element.setOnCopy((id, element) => {
-      console.log("copy: ")
-      console.log(element)
       this.elements.set(id, element);
     });
     element.setGlobalId(() => {

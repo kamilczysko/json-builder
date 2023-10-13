@@ -46,7 +46,7 @@ export default class ElementGUI {
             } else {
                 mainElement.classList.remove("selected");
             }
-            this.onSelect();
+            this.onSelect(this.id);
         }
 
         let elementHeader = document.createElement("div");
@@ -113,14 +113,14 @@ export default class ElementGUI {
         removeButton.innerText = "X";
         removeButton.classList.add("removeButton")
         removeButton.onclick = () => {
-            this.removeElement();
+            this.removeElement(this.id);
             if (this.element.getParent()) {
                 this.element.getParent().removeChild(this.id);
             } else {
                 document.getElementById("schemaContainer").removeChild(this.getElementGraphical())
             }
             this.element.getChildren().forEach(element => {
-                element.removeElement();
+                element.removeElement(this.id);
             });
             this.onChange();
         }
@@ -285,8 +285,8 @@ export default class ElementGUI {
         const newId = "element_" + tmpIDX
         const copied = new ElementGUI(newId, this.name + "-copy-" + tmpIDX, null);
 
-        copied.getElement().setList(this.element.getList());
-        copied.getElement().setAttributes(this.element.getAttributes());
+        copied.getElement().setList([...this.element.getList()]);
+        copied.getElement().setAttributes(new Map(this.element.getAttributes()));
         copied.getElement().setParent(this.element.getParent())
         copied.getElement().setIsArray(this.element.isArray)
 

@@ -100,7 +100,8 @@ export default class ElementGUI {
         let copyButton = document.createElement("button");
         copyButton.innerText = "copy";
         let removeButton = document.createElement("button");
-        removeButton.innerText = "˟";
+        removeButton.innerText = "X";
+        removeButton.classList.add("removeButton")
         removeButton.onclick = () => {
             this.removeElement();
             if (this.element.getParent()) {
@@ -111,7 +112,6 @@ export default class ElementGUI {
             this.element.getChildren().forEach(element => {
                 element.removeElement();
             });
-            // this.element = null;
             this.onChange();
         }
 

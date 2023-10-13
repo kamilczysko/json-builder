@@ -134,7 +134,6 @@ export default class Element {
       } else if (children) {
         return namePrefix + "{" + children + "}";
       }
-
       if (asArray) {
         return null;
       }

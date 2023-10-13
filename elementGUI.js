@@ -301,12 +301,10 @@ export default class ElementGUI {
         copied.setParentProvider(this.parentProvider);
 
         this.onCopy(newId, copied);
-        if (this.element.hasChildren()) {
-            this.element.getChildren().values().forEach(child => {
-                const clonedChild = this.parentProvider(child.getId()).clone();
-                copied.addChild(clonedChild);
-            })
-        }
+        Array.from(this.element.getChildren().values()).forEach(child => {
+            const clonedChild = this.parentProvider(child.getId()).clone();
+            copied.addChild(clonedChild);
+        })
 
         this.onChange();
 

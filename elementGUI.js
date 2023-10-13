@@ -100,7 +100,7 @@ export default class ElementGUI {
         let copyButton = document.createElement("button");
         copyButton.innerText = "copy";
         let removeButton = document.createElement("button");
-        removeButton.innerText = "remove";
+        removeButton.innerText = "˟";
         removeButton.onclick = () => {
             this.removeElement();
             if (this.element.getParent()) {
@@ -124,7 +124,8 @@ export default class ElementGUI {
 
         let elementContainer = document.createElement("div");
         elementContainer.className = `element-container`;
-        elementContainer.ondblclick = () => {
+        elementContainer.ondblclick = (event) => {
+            event.stopPropagation();
             this.generateChild(this.id);
         }
         elementContainer.id = this.id + "-drop";

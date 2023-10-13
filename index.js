@@ -5,10 +5,6 @@ function add() {
     schema.addElement({ x: 0, y: 0 }, null, null, false);
 }
 
-document.getElementById("addButton").onclick = () => {
-    add();
-}
-
 document.getElementById("schemaContainer").ondblclick = (event) => {
     const position = {
         x: event.offsetX,

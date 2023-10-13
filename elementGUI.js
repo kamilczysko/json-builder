@@ -20,6 +20,7 @@ export default class ElementGUI {
         const graphicsElements = this.initGraphicalRepresentation(id, position, name);
         this.guiElement = graphicsElements.main;
         this.guiElementContainer = graphicsElements.elementContainer;
+        this.copyButton = graphicsElements.copyButton;
     }
 
     initGraphicalRepresentation(id, position, name) {
@@ -97,6 +98,7 @@ export default class ElementGUI {
         addButton.onclick = () => {
             this.generateChild(this.id);
         }
+        
         let copyButton = document.createElement("button");
         copyButton.innerText = "copy";
         let removeButton = document.createElement("button");
@@ -116,9 +118,10 @@ export default class ElementGUI {
         }
 
         buttonPanel.appendChild(addButton);
-        buttonPanel.appendChild(copyButton);
         buttonPanel.appendChild(removeButton);
-
+        console.log("isPrimary: "+this.element.getIsPrimary())
+        buttonPanel.appendChild(copyButton);
+        
         elementHeader.appendChild(topPanel);
         elementHeader.appendChild(buttonPanel);
 
@@ -141,7 +144,7 @@ export default class ElementGUI {
             this.onChange();
         });
 
-        return { main: mainElement, elementContainer: elementContainer };
+        return { main: mainElement, elementContainer: elementContainer, copyButton: copyButton };
     }
 
     getId() {
@@ -191,6 +194,14 @@ export default class ElementGUI {
 
     getElement() {
         return this.element;
+    }
+
+    setPrimary(primary) {
+        console.log("proiamry: "+primary)
+        if(primary) {
+            this.copyButton.style.display = "none"
+        }
+        this.element.setPrimary(primary);
     }
 
     setSelected(selected) {

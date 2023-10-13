@@ -44,7 +44,7 @@ export default class Schema {
     element.setOnDelete(() => this.removeElement(element.getId()))
 
     if (this.currentId == 0 || this.elements.length == 0) { //todo set primary first element with lowest layer or if even layers with more children
-      element.getElement().setPrimary(true);
+      element.setPrimary(true);
     }
     this.elements.set(newId, element);
     this.elements.get(parentId).addChild(element);
@@ -65,7 +65,7 @@ export default class Schema {
     element.setOnDelete(() => this.removeElement(element.getId()))
 
     if (this.currentId == 0 || this.elements.length == 0) { //todo set primary first element with lowest layer or if even layers with more children
-      element.getElement().setPrimary(true);
+      element.setPrimary(true);
     }
     this.elements.set(newId, element);
 
@@ -215,7 +215,6 @@ export default class Schema {
     const mainElement = this.getMainElement()
     let json = null
     if (mainElement) {
-      console.log(mainElement.getElement().getJSON())
       json = JSON.stringify(JSON.parse("{" + mainElement.getElement().getJSON() + "}"), null, 5)
     }
     document.getElementById("textarea").value = json;

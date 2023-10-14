@@ -21,13 +21,8 @@ export default class Schema {
 
         if (copiedElement) {
           const newElement = copiedElement.clone();
-          if (this.selectedElementId == copiedElement.getId()) { //paste to parent as original
-            const parent = this.elements.get(copiedElement.getElement().getParent().getId());
-            parent.addChild(newElement);
-          } else { //paste to selected item
-            const parent = this.elements.get(this.selectedElementId);
-            parent.addChild(newElement);
-          }
+          const parent = this.elements.get(this.selectedElementId);
+          parent.addChild(newElement);
           this.elements.set(newElement.getId(), newElement);
         }
       }

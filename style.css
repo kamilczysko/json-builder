@@ -14,13 +14,17 @@ body {
     /* Standard syntax */
     font-size: .8rem;
     color: black;
-    background-color: rgba(169, 169, 255, .4);
+    background-color: rgba(169, 169, 255, 1);
     cursor: pointer;
     min-width: 15%;
-    max-width: 40%;
+    max-width: 20%;
     border-radius: 5px;
     padding: 5px;
     box-shadow: 1px 1px 5px black;
+}
+
+.isChild {
+    max-width: 90%;
 }
 
 .element:hover {
@@ -122,7 +126,7 @@ body {
 .parent {
     border-radius: 15px;
     border: 3px solid black;
-    max-width: 65%;
+    max-width: 80%;
 }
 
 .element-container {
@@ -140,13 +144,21 @@ body {
     padding-top: 25px;
 }
 
-.element-container::before {
-    color: rgba(0, 0, 0, 0.461);
+.element-container .info {
+    color: rgba(0, 0, 0, 0.248);
     font-size: .8rem;
     position: absolute;
-    left: 10px;
-    top: 0px;
-    content: "Double click to add new element or drag and drop existing one";
+    height: fit-content;
+    width: fit-content;
+    overflow: hidden;
+}
+
+.element-container:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
 }
 
 .above {
@@ -228,8 +240,6 @@ body {
     margin: 0px;
     background-color: #A9C9FF;
     background-image: linear-gradient(180deg, #A9C9FF 0%, #FFBBEC 100%);
-
-
 }
 
 .schemaContainer::before {

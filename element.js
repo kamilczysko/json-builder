@@ -107,6 +107,10 @@ export default class Element {
     return this.children.size > 0;
   }
 
+  hasChild(id) {
+    return this.children.has(id)
+  }
+
   removeElement() {
     this.parent.removeChild(this.id);
     this.children.forEach(e => {

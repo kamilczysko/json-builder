@@ -91,7 +91,7 @@ export default class ElementGUI {
         checkbox.appendChild(isArrayCheckbox);
         checkbox.appendChild(label);
 
-        
+
         topPanel.appendChild(nameContainer);
         // topPanel.appendChild(checkbox);
 
@@ -100,7 +100,8 @@ export default class ElementGUI {
 
         let addButton = document.createElement("button");
         addButton.innerText = "add";
-        addButton.onclick = () => {
+        addButton.onclick = (event) => {
+            event.stopPropagation();
             this.generateChild(this.id);
         }
 
@@ -144,6 +145,12 @@ export default class ElementGUI {
         }
         elementContainer.id = this.id + "-drop";
 
+        let info = document.createElement("p");
+        info.classList.add("info");
+        info.innerText = "Double click to add new element or drag and drop existing one"
+
+        elementContainer.appendChild(info);
+
         mainElement.appendChild(elementHeader);
         mainElement.appendChild(elementContainer);
 
@@ -167,7 +174,11 @@ export default class ElementGUI {
     }
 
     addChild(child) {
+        if (child.getElement().hasChild(this.id)) { //prevent errors during dragging objects with children
+            return;
+        }
         this.element.addChild(child.getElement());
+        child.getElementGraphical().classList.add("isChild");
         this.guiElementContainer.appendChild(child.getElementGraphical())
         child.getElementGraphical().style.position = "block"
         this.guiElement.classList.add("parent")
@@ -176,10 +187,13 @@ export default class ElementGUI {
 
     deleteChild(child) {
         this.element.removeChild(child.getElement().getId());
-        if (this.element.hasChildren()) {
+        if (!this.element.hasChildren()) {
             this.guiElementContainer.classList.remove("parent")
         }
-        this.guiElementContainer.removeChild(child.getElementGraphical());
+        if (this.guiElementContainer.contains(child.getElementGraphical())) {
+            this.guiElementContainer.removeChild(child.getElementGraphical());
+            child.getElementGraphical().classList.remove("isChild");
+        }
         document.getElementById("schemaContainer").appendChild(child.getElementGraphical())
         this.onChange();
     }

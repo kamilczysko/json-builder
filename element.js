@@ -23,6 +23,11 @@ export default class Element {
   }
 
   setParent(parent) {
+    if(parent == null) {
+      this.parent = null;
+      this.setLayer(1);
+      return;
+    }
     if (this.parent && this.parent.getId() != parent.getId()) {
       this.parent.removeChild(this.id);
     }

@@ -188,20 +188,22 @@ export default class ElementGUI {
     deleteChild(child) {
         this.element.removeChild(child.getElement().getId());
         if (!this.element.hasChildren()) {
-            this.guiElementContainer.classList.remove("parent")
+            this.guiElement.classList.remove("parent")
         }
         if (this.guiElementContainer.contains(child.getElementGraphical())) {
             this.guiElementContainer.removeChild(child.getElementGraphical());
             child.getElementGraphical().classList.remove("isChild");
+            child.getElement().setParent(null);
         }
         document.getElementById("schemaContainer").appendChild(child.getElementGraphical())
         this.onChange();
     }
 
     removePermament(child) {
+        if(!this.element.hasChild(child.getElement().getId())) {return;}
         this.element.removeChild(child.getElement().getId());
-        if (this.element.hasChildren()) {
-            this.guiElementContainer.classList.remove("parent")
+        if (!this.element.hasChildren()) {
+            this.guiElement.classList.remove("parent")
         }
         this.guiElementContainer.removeChild(child.getElementGraphical());
         this.onChange();

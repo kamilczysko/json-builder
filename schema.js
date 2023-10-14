@@ -159,6 +159,12 @@ export default class Schema {
     const valueInput = document.createElement("input");
     valueInput.type = "text";
     valueInput.value = value;
+    keyInput.onkeydown = (ev) => {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        valueInput.select()
+      }
+    }
     valueInput.oninput = () => {
       element.setAttribute(keyInput.value, valueInput.value);
     }

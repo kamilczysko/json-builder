@@ -34,7 +34,13 @@
     <div>
       <button id="json-container-show-button">⇶ </button>
     </div>
-    <textarea class="jsonContainer" id="textarea" cols="50" rows="20" placeholder="Your JSON will be here"></textarea>
+    <div>
+      <div id="copyPanel">
+        <button id="copyToClipboardButton">📋</button>
+        <span id="copyInfo" class="copyInfo-hidden">copied!</span>
+      </div>
+      <textarea class="jsonContainer" id="textarea" cols="50" rows="20" placeholder="Your JSON will be here"></textarea>
+    </div>
   </div>
   <div class="panel" id="panel">
     <p>Attributes:</p>

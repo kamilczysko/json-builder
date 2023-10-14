@@ -1,6 +1,6 @@
-- przycisk kopiowania do schowka
+- przycisk kopiowania do schowka +
 - kopiowanie przez crtl c v
 - poprawić dodawanie atrybutów, zeby juz przy dodawaniu klucza byl element dodany
 - tab dotwarza tez nowy atrybut 
-- czasem jest problem z przesuwaniem obiektu, wywala rodzica
+- czasem jest problem z przesuwaniem obiektu, wywala rodzica +
 - tworzenie schematu z jsona 

@@ -205,6 +205,8 @@ body {
 }
 
 .panel button {
+    font-size:medium;
+    font-weight:100;
     cursor: pointer;
     background: none;
     border: 1px solid black;
@@ -269,25 +271,24 @@ body {
     position: absolute;
     right: 10px;
     top: 10px;
-    width: 30%;
+    width: fit-content;
 }
 
 .hidden {
     transition-timing-function: ease-in-out;
     transition: right rotate;
     transition-duration: .5s;
-    right: -28%;
+    right: -20%;
 }
 
 .visible {
     transition-timing-function: ease-in-out;
     transition: right rotate;
     transition-duration: .5s;
-    right: 0%;
+    right: 0px;
 }
 
 .hidden button {
-
     transition-timing-function: ease-in-out;
     transition: right rotate;
     transition-duration: .6s;
@@ -301,13 +302,8 @@ body {
 }
 
 .json-panel button {
-    /* position: absolute; */
-    /* top: 0px; */
-    /* left: 0px; */
     -webkit-user-select: none;
-    /* Safari */
     -ms-user-select: none;
-    /* IE 10 and IE 11 */
     user-select: none;
     background: none;
     border: none;
@@ -324,4 +320,27 @@ body {
 
 .json-panel button:active {
     scale: 1.5;
+}
+
+#copyPanel {
+    position: absolute;
+    left: 10px;
+    bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.copyInfo-visible {
+    transition-timing-function: ease-in-out;
+    transition: opacity !important;
+    transition-duration: .2s !important;
+    opacity: 1;
+}
+
+
+.copyInfo-hidden {
+    transition-timing-function: ease-in-out;
+    transition: opacity !important;
+    transition-duration: .2s !important;
+    opacity: 0;
 }

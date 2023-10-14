@@ -279,7 +279,12 @@ export default class ElementGUI {
         this.element.setAttribute(key, value);
         this.onChange();
     }
-
+    
+    setAttributeByIndex(key, value, index) {
+        this.element.setAttributeByIndex(key, value, index);
+        this.onChange();
+    }
+    
     addToList(item) {
         this.element.addToList(item);
         this.onChange();
@@ -306,7 +311,7 @@ export default class ElementGUI {
         const copied = new ElementGUI(newId, this.name + "-copy-" + tmpIDX, null);
 
         copied.getElement().setList([...this.element.getList()]);
-        copied.getElement().setAttributes(new Map(this.element.getAttributes()));
+        copied.getElement().setAttributes(structuredClone(this.element.getAttributes()));
         copied.getElement().setParent(this.element.getParent())
         copied.getElement().setIsArray(this.element.isArray)
 

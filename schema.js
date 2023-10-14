@@ -30,7 +30,7 @@ export default class Schema {
     })
   }
 
-  createElement(position={ x: 0, y: 0 }) {
+  createElement(position = { x: 0, y: 0 }) {
     const newId = "element-" + this.currentId;
     const element = new ElementGUI(newId, newId, position);
     element.setOnSelect((id) => this.selectElement(id));
@@ -46,11 +46,11 @@ export default class Schema {
     });
     element.setGlobalId(() => {
       const newId = this.currentId;
-      this.currentId ++;
+      this.currentId++;
       return newId;
     })
 
-    element.setParentProvider((id) => {return this.elements.get(id)})
+    element.setParentProvider((id) => { return this.elements.get(id) })
 
     if (this.currentId == 0 || this.elements.length == 0) {
       element.setPrimary(true);
@@ -94,7 +94,7 @@ export default class Schema {
     if (primaryItems.length > 0) {
       return primaryItems[0]
     }
-    if(Array.from(this.elements.values()).length == 1) {
+    if (Array.from(this.elements.values()).length == 1) {
       Array.from(this.elements.values())[0].getElement().setPrimary(true);
       return Array.from(this.elements.values())[0]
     }
@@ -104,7 +104,7 @@ export default class Schema {
   updateElementTypeData() {
     const actualElement = this.elements.get(this.selectedElementId);
     document.getElementById("attributes").innerHTML = null;
-    if(actualElement == null) {
+    if (actualElement == null) {
       return;
     }
     if (actualElement.getElement().isArray) {
@@ -121,10 +121,11 @@ export default class Schema {
     } else {
       this.setAttributesOnView(this.selectedElementId);
       document.getElementById("addAttribute").onclick = () => {
-        this.addAttributesToView(actualElement, "", "");
+        actualElement.setAttribute("", "");
+        this.addAttributesToView(actualElement, "", "", actualElement.getElement().getAttributes().length - 1);
       };
       document.getElementById("clearAttributes").onclick = () => {
-        actualElement.getElement().setAttributes(new Map());
+        actualElement.getElement().setAttributes([]);
         this.updateJSON();
         this.updateElementTypeData();
       };
@@ -139,14 +140,15 @@ export default class Schema {
   }
 
   setAttributesOnView(elementId) {
+    document.getElementById("attributes").innerHTML = null;
     const element = this.elements.get(elementId);
-    element.getElement().getAttributes().forEach((value, key) => {
-      this.addAttributesToView(element, key, value);
+    element.getElement().getAttributes().forEach((entry, index) => {
+      this.addAttributesToView(element, entry.key, entry.value, index);
     })
   }
 
 
-  addAttributesToView(element, key, value) {
+  addAttributesToView(element, key, value, index) {
     const attribute = document.createElement("div");
     attribute.classList.add("attribute");
     const keyLabel = document.createElement("span");
@@ -159,6 +161,10 @@ export default class Schema {
     const valueInput = document.createElement("input");
     valueInput.type = "text";
     valueInput.value = value;
+
+    keyInput.oninput = () => {
+      element.setAttributeByIndex(keyInput.value, valueInput.value, index);
+    }
     keyInput.onkeydown = (ev) => {
       if (ev.key === "Enter") {
         ev.preventDefault();
@@ -166,12 +172,13 @@ export default class Schema {
       }
     }
     valueInput.oninput = () => {
-      element.setAttribute(keyInput.value, valueInput.value);
+      element.setAttributeByIndex(keyInput.value, valueInput.value, index);
     }
     valueInput.onkeydown = (ev) => {
       if (ev.key === "Enter") {
         ev.preventDefault();
-        this.addAttributesToView(element, "", "");
+        element.setAttribute("", "");
+        this.addAttributesToView(element, "", "", index + 1);
       }
     }
     const removeButton = document.createElement("button");
@@ -179,6 +186,8 @@ export default class Schema {
     removeButton.onclick = () => {
       element.deleteAttribute(keyInput.value);
       document.getElementById("attributes").removeChild(attribute);
+
+      this.setAttributesOnView(this.selectedElementId);
     }
 
     attribute.appendChild(keyLabel);
@@ -220,10 +229,6 @@ export default class Schema {
     attribute.appendChild(removeButton);
     document.getElementById("attributes").appendChild(attribute);
     valueInput.select();
-  }
-  reloadList() {
-    document.getElementById("attributes").innerHTML = null;
-    this.setListOnView(this.selectedElementId);
   }
 
   updateJSON() {

@@ -7,7 +7,7 @@ export default class Element {
     this.parent = null;
     this.isArray = false;
     this.layer = 0;
-    this.attributes = new Map();
+    this.attributes = [];
     this.list = [];
   }
 
@@ -23,7 +23,7 @@ export default class Element {
   }
 
   setParent(parent) {
-    if(parent == null) {
+    if (parent == null) {
       this.parent = null;
       this.setLayer(1);
       return;
@@ -68,7 +68,7 @@ export default class Element {
   }
 
   getAttribute(key) {
-    return this.attributes.get(key);
+    return this.attributes.filter(a => a.key == key)[0]
   }
 
   setAttributes(attributes) {
@@ -76,11 +76,21 @@ export default class Element {
   }
 
   setAttribute(key, value) {
-    this.attributes.set(key, value)
+    this.attributes.push({ key: key, value: value })
+  }
+
+  setAttributeByIndex(key, value, index) {
+    console.log(index + " - " + this.attributes.length)
+    if (this.attributes.length == 0) {
+      this.attributes.push({ key: key, value: value });
+    } else {
+      this.attributes[index].key = key;
+      this.attributes[index].value = value;
+    }
   }
 
   deleteAttribute(key) {
-    this.attributes.delete(key);
+    this.attributes = this.attributes.filter(a => a.key != key);
   }
 
   setList(list) {
@@ -169,11 +179,11 @@ export default class Element {
 
   getAttributesAsJSON() {
     let result = "";
-    this.getAttributes().forEach((value, key) => {
-      if (this.isNumeric(value)) {
-        result += "\"" + key + "\":" + value + ",";
+    this.getAttributes().forEach((entry) => {
+      if (this.isNumeric(entry)) {
+        result += "\"" + entry.key + "\":" + entry.value + ",";
       } else {
-        result += "\"" + key + "\":\"" + value + "\",";
+        result += "\"" + entry.key + "\":\"" + entry.value + "\",";
       }
     })
     if (result == "") {

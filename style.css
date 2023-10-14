@@ -3,6 +3,7 @@ body {
     font-weight: 200;
     padding: 0px;
     margin: 0px;
+    overflow-x: hidden;
 }
 
 .element {
@@ -238,8 +239,6 @@ body {
     width: 100%;
     min-height: 100vh;
     margin: 0px;
-    background-color: #A9C9FF;
-    background-image: linear-gradient(180deg, #A9C9FF 0%, #FFBBEC 100%);
 }
 
 .schemaContainer::before {
@@ -255,11 +254,10 @@ body {
 }
 
 .jsonContainer {
-    overflow: scroll;
+    overflow-y: scroll;
     resize: none;
     outline: none;
     resize: vertical;
-    overflow: scroll;
     text-wrap: nowrap;
     border-radius: 10px;
     box-shadow: 1px 1px 5px black;

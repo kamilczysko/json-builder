@@ -7,6 +7,37 @@ export default class Schema {
     this.selectedElementId = null;
     this.currentId = 0;
     this.setMainContainer();
+
+    let ctrlDown = false;
+    let copiedElement = null;
+    document.body.onkeydown = (ev) => {
+      if (ev.key == "Control" || ev.key == "Meta") {
+        ctrlDown = true;
+      }
+
+      if (ev.key == "c" && ctrlDown) {
+        copiedElement = this.elements.get(this.selectedElementId);
+      } else if (ev.key == "v" && ctrlDown) {
+
+        if (copiedElement) {
+          const newElement = copiedElement.clone();
+          if (this.selectedElementId == copiedElement.getId()) { //paste to parent as original
+            const parent = this.elements.get(copiedElement.getElement().getParent().getId());
+            parent.addChild(newElement);
+          } else { //paste to selected item
+            const parent = this.elements.get(this.selectedElementId);
+            parent.addChild(newElement);
+          }
+          this.elements.set(newElement.getId(), newElement);
+        }
+      }
+    }
+
+    document.body.onkeyup = (ev) => {
+      if (ev.key == "Control" || ev.key == "Meta") {
+        ctrlDown = false;
+      }
+    }
   }
 
   createSchemaFromJSON(text) {

@@ -106,7 +106,7 @@ export default class ElementGUI {
         }
 
         let copyButton = document.createElement("button");
-        copyButton.innerText = "copy";
+        copyButton.innerText = "duplicate";
         copyButton.onclick = () => {
             const cloned = this.clone(this.globalId());
             const parentId = this.element.getParent().getId();

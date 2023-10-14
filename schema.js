@@ -186,7 +186,6 @@ export default class Schema {
     removeButton.onclick = () => {
       element.deleteAttribute(keyInput.value);
       document.getElementById("attributes").removeChild(attribute);
-
       this.setAttributesOnView(this.selectedElementId);
     }
 

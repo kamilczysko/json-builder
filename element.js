@@ -180,7 +180,7 @@ export default class Element {
   getAttributesAsJSON() {
     let result = "";
     this.getAttributes().forEach((entry) => {
-      if (this.isNumeric(entry)) {
+      if (this.isNumeric(entry.value)) {
         result += "\"" + entry.key + "\":" + entry.value + ",";
       } else {
         result += "\"" + entry.key + "\":\"" + entry.value + "\",";

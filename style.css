@@ -1,6 +1,8 @@
 body {
     font-family: 'Poppins', sans-serif;
     font-weight: 200;
+    padding: 0px;
+    margin: 0px;
 }
 
 .element {
@@ -47,10 +49,12 @@ body {
     text-align: center;
     font-weight: 400;
     line-height: 1.1;
+    border: 1px dashed black;
 }
 
 .element-header input:hover {
-    background: rgba(255, 85, 170, 0.356);
+    background: rgba(219, 0, 110, 0.106);
+    border: 1px solid black;
 }
 
 .element-header .checkbox {
@@ -118,7 +122,7 @@ body {
 .parent {
     border-radius: 15px;
     border: 3px solid black;
-    max-width: 70%;
+    max-width: 65%;
 }
 
 .element-container {
@@ -142,7 +146,7 @@ body {
     position: absolute;
     left: 10px;
     top: 0px;
-    content: "Double click to add element";
+    content: "Double click to add new element or drag and drop existing one";
 }
 
 .above {
@@ -158,19 +162,23 @@ body {
 }
 
 .remove-button {
-    width: 15px !important;
-    height: 15px !important;
+    width: 20px !important;
+    height: 20px !important;
     border: 1px solid black !important;
-    border-radius: 50px !important;
+    border-radius: 100px !important;
     display: flex;
-    /* position: absolute; */
-    right: 15px;
     align-items: center;
     justify-content: center;
 }
 
 .remove-button:hover {
     background: rgba(255, 0, 0, 0.176);
+    text-decoration: none !important;
+    scale: 1.1;
+}
+
+.remove-button:acgive {
+    scale: 1.2;
 }
 
 .panel {
@@ -212,10 +220,16 @@ body {
 }
 
 .schemaContainer {
+    background: rgba(25, 100, 250, 0.108);
     position: relative;
+    top:0px;
     width: 100%;
-    height: 90vh;
-    margin-top: 30px;
+    min-height: 100vh;
+    margin: 0px;
+    background-color: #A9C9FF;
+    background-image: linear-gradient(180deg, #A9C9FF 0%, #FFBBEC 100%);
+
+
 }
 
 .schemaContainer::before {
@@ -234,11 +248,74 @@ body {
     overflow: scroll;
     resize: none;
     outline: none;
+    resize: vertical;
+    overflow: scroll;
+    text-wrap: nowrap;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px black;
+    margin: 10px;
+    background-color: #FFDEE9;
+    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+
+}
+
+.json-panel {
     position: absolute;
     right: 10px;
     top: 10px;
-    resize: vertical;
-    overflow: scroll;
     width: 30%;
-    text-wrap: nowrap;
+}
+
+.hidden {
+    transition-timing-function: ease-in-out;
+    transition: right rotate;
+    transition-duration: .5s;
+    right: -28%;
+}
+
+.visible {
+    transition-timing-function: ease-in-out;
+    transition: right rotate;
+    transition-duration: .5s;
+    right: 0%;
+}
+
+.hidden button {
+
+    transition-timing-function: ease-in-out;
+    transition: right rotate;
+    transition-duration: .6s;
+    rotate: 180deg;
+}
+
+.visible button {
+    transition-timing-function: ease-in-out;
+    transition: right rotate;
+    transition-duration: .6s;
+}
+
+.json-panel button {
+    /* position: absolute; */
+    /* top: 0px; */
+    /* left: 0px; */
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: large;
+}
+
+.json-panel button:hover {
+    transition-timing-function: ease-in-out;
+    transition: scale !important;
+    transition-duration: .2s !important;
+    scale: 1.3;
+}
+
+.json-panel button:active {
+    scale: 1.5;
 }

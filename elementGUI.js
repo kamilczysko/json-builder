@@ -65,6 +65,7 @@ export default class ElementGUI {
         inputName.oninput = () => {
             this.setName(inputName.value);
         }
+        inputName.placeholder = "Enter a name for the object here"
         inputName.ondblclick = () => {
             event.stopPropagation();
         }

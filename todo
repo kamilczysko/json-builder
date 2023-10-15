@@ -7,3 +7,11 @@
 - formatowanie jsona jak wpisujemy z palca, moze podswietlanie skladni
 - poprawić wyświetlanie json, albo objekt primary jest podstawoy, albo na polu mozna ustawiac jeszcze inne ktore tez beda primary
 - jesli glowny json jest wrzucony do innego kontenerka to zmienic primary na tamten kontenerek
+
+{
+     "a":{
+"b": {
+"d": [1,2,3]
+}
+}
+}

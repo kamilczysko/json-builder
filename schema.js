@@ -102,7 +102,7 @@ export default class Schema {
     newElement.getElement().setList([...list]);
     newElement.getElement().setAttributes(structuredClone(attributes));
     const isArray = list != null && list.length > 0;
-    newElement.getElement().setIsArray(isArray)
+    newElement.setIsArray(isArray)
 
     newElement.setOnSelect((id) => this.selectElement(id));
     newElement.setOnChange(() => {
@@ -358,13 +358,18 @@ export default class Schema {
 
     const objAsMap = new Map(Object.entries(object));
     objAsMap.forEach((value, key) => {
+      console.log("array value: ")
+      console.log(value)
       if (this.isArray(value)) {
         //support also list of objects
         let isArrayWithObjects = Array.from(value).filter(obj => this.isObject(obj)).length > 0;
         if (isArrayWithObjects) {
           listOfChildren.push(this.getObject(value, key))
         } else {
-          list = Array.from(value)
+          // list = Array.from(value)
+          console.log(value+" - "+key)
+          // children.push(this.getObject(value, key));
+          children.push(this.createElementForSchema(key, [], value));
         }
       } else if (this.isStringOrNumber(value)) {
         attributes.push({ key: key, value: value });
@@ -375,7 +380,6 @@ export default class Schema {
     });
     const newElement = this.createElementForSchema(name, attributes, list);
     children.forEach(child => {
-      console.log(child)
       newElement.addChild(child);
     })
     return newElement;

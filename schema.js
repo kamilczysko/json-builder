@@ -377,7 +377,7 @@ export default class Schema {
         children.push(this.getObject(value, key));
       }
     });
-    const newElement = this.createElementForSchema(name, attributes, list, listOfChildren.length > 0);
+    const newElement = this.createElementForSchema(name, attributes, list, this.isArray(object));
     children.forEach(child => {
       newElement.addChild(child);
     })

@@ -313,7 +313,7 @@ export default class Schema {
   }
 
 
-  /****create from json*****TODO separate script****/
+  /****create from json*****DONT touch****/
 
   createSchemaFromJSON(text) {
     try {
@@ -377,12 +377,7 @@ export default class Schema {
       if (this.isObject(value)) { 
         if (this.hasOnlyOneAttribute(object)) {
           Array.from(Object.entries((value))).forEach((v, i) => {
-                console.log(Object.values(v)[1])
-                console.log(i)
                 if(Array.from(Object.values(v)[1]).filter(a => this.isObject(a)).length > 0) {
-                  // Array.from(Object.values(v)[1]).forEach(b => 
-                  //   children.push(this.getObject(b, Object.values(v)[0]))
-                  //   )
                   children.push(this.getObject(value, key));
                 } else {
                   children.push(this.createElementForSchema(Object.values(v)[0], [], Object.values(v)[1]));

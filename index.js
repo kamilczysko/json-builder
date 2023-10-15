@@ -1,4 +1,6 @@
 import Schema from "schema"
+import * as jsonparser from "jsonparser"
+
 const schema = new Schema();
 
 document.getElementById("schemaContainer").ondblclick = (event) => {

@@ -8,6 +8,10 @@ export default class Schema {
     this.currentId = 0;
     this.setMainContainer();
 
+    this.setOnCopyAction();
+  }
+
+  setOnCopyAction() {
     let ctrlDown = false;
     let copiedElement = null;
     document.body.onkeydown = (ev) => {
@@ -32,16 +36,7 @@ export default class Schema {
       if (ev.key == "Control" || ev.key == "Meta") {
         ctrlDown = false;
       }
-    }
-  }
-
-  createSchemaFromJSON(text) {
-    try {
-      const json = JSON.parse(text);
-      document.getElementById("textarea").value = JSON.stringify(json, null, 5)
-    } catch {
-
-    }
+    };
   }
 
   setMainContainer() {
@@ -98,6 +93,40 @@ export default class Schema {
 
     this.currentId++;
     this.updateJSON();
+  }
+
+  createElement(name, attributes, list) {
+    const newId = "element-" + this.currentId;
+    const newElement = new ElementGUI(newId, name, { x: 100, y: 100 });
+
+    newElement.getElement().setList([...list]);
+    newElement.getElement().setAttributes(structuredClone(attributes));
+    const isArray = list != null && list.length > 0;
+    newElement.getElement().setIsArray(isArray)
+
+    newElement.setOnSelect((id) => this.selectElement(id));
+    newElement.setOnChange(() => {
+      this.updateJSON();
+    });
+    newElement.setOnTypeChange(() => this.updateElementTypeData());
+    newElement.setChildProvider((childId) => this.getChildElement(childId));
+    newElement.setOnAddChild((parentId) => this.addElementToParent(parentId));
+    newElement.setOnDelete((id) => this.removeElement(id));
+    newElement.setOnCopy((id, element) => {
+      this.elements.set(id, element);
+    });
+    newElement.setGlobalId(() => {
+      const newId = this.currentId;
+      this.currentId++;
+      return newId;
+    })
+
+    newElement.setParentProvider((id) => { return this.elements.get(id) })
+
+    this.elements.set(newId, newElement);
+    this.currentId++;
+
+    return newElement;
   }
 
   getChildElement(childId) {
@@ -273,5 +302,74 @@ export default class Schema {
     }
     this.elements.delete(id);
     this.selectedElementId = null;
+  }
+
+
+  /****create from json*****TODO separate script****/
+
+  createSchemaFromJSON(text) {
+    try {
+      const result = this.processObject(JSON.parse(text), null);
+      document.getElementById("schemaContainer").appendChild(result.getElementGraphical())
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  processObject(object) {
+    const mainElement = this.getObject(object, "main");
+    mainElement.setPrimary(true);
+    console.log(mainElement)
+    return mainElement;
+  }
+
+  isObject(value) {
+    return typeof value === 'object' &&
+      !Array.isArray(value) &&
+      value !== null
+  }
+
+  isArray(value) {
+    return Array.isArray(value) &&
+      value !== null
+  }
+
+  isStringOrNumber(value) {
+    return typeof value == "string" || typeof value == "number"
+  }
+
+  getObject(object, name) {
+    let listOfChildren = [];
+    let list = [];
+    let attributes = [];
+    let children = [];
+
+    if (object == null) {
+      return this.createElement(name, [], []);
+    }
+
+    const objAsMap = new Map(Object.entries(object));
+    objAsMap.forEach((value, key) => {
+      if (this.isArray(value)) {
+        //support also list of objects
+        let isArrayWithObjects = Array.from(value).filter(obj => this.isObject(obj)).length > 0;
+        if (isArrayWithObjects) {
+          listOfChildren.push(this.getObject(value, key))
+        } else {
+          list = Array.from(value)
+        }
+      } else if (this.isStringOrNumber(value)) {
+        attributes.push({ key: key, value: value });
+      }
+      if (this.isObject(value)) {
+        children.push(this.getObject(value, key));
+      }
+    });
+    const newElement = this.createElement(name, attributes, list);
+    children.forEach(child => {
+      console.log(child)
+      newElement.addChild(child);
+    })
+    return newElement;
   }
 }

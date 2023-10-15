@@ -330,6 +330,9 @@ body {
     bottom: 20px;
     display: flex;
     align-items: center;
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
 }
 
 .copyInfo-visible {

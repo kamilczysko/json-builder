@@ -21,7 +21,8 @@
         "interact": "https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js",
         "schema": "./schema.js",
         "interactivesettings": "./interactivesettings.js",
-        "elementGUI": "./elementGUI.js"
+        "elementGUI": "./elementGUI.js",
+        "jsonparser": "./jsonparser.js"
       }
     }
   </script>
@@ -32,12 +33,15 @@
   </div>
   <div class="json-panel" id="json-panel">
     <div>
-      <button id="json-container-show-button">⇶ </button>
+      
     </div>
     <div>
       <div id="copyPanel">
-        <button id="copyToClipboardButton">📋</button>
-        <span id="copyInfo" class="copyInfo-hidden">copied!</span>
+        <button id="json-container-show-button">⇶ </button>
+        <div>
+          <span id="copyInfo" class="copyInfo-hidden">copied!</span>
+          <button id="copyToClipboardButton">📋</button>
+        </div>
       </div>
       <textarea class="jsonContainer" id="textarea" cols="50" rows="20" placeholder="Your JSON will be here"></textarea>
     </div>

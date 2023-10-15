@@ -80,7 +80,6 @@ export default class Element {
   }
 
   setAttributeByIndex(key, value, index) {
-    console.log(index + " - " + this.attributes.length)
     if (this.attributes.length == 0) {
       this.attributes.push({ key: key, value: value });
     } else {

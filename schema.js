@@ -1,6 +1,8 @@
 import ElementGUI from "elementGUI";
 import "interact"
 
+let fromJSON = false;
+
 export default class Schema {
   constructor() {
     this.elements = new Map();
@@ -55,9 +57,7 @@ export default class Schema {
     const newId = "element-" + this.currentId;
     const element = new ElementGUI(newId, newId, position);
     element.setOnSelect((id) => this.selectElement(id));
-    element.setOnChange(() => {
-      this.updateJSON();
-    });
+    element.setOnChange(() => {this.updateJSON();});
     element.setOnTypeChange(() => this.updateElementTypeData());
     element.setChildProvider((childId) => this.getChildElement(childId));
     element.setOnAddChild((parentId) => this.addElementToParent(parentId));
@@ -286,6 +286,9 @@ export default class Schema {
   }
 
   updateJSON() {
+    if(fromJSON) {
+      return; //prevent refreshing when done from json
+    }
     const mainElement = this.getMainElement()
     let json = null
     if (mainElement) {
@@ -309,17 +312,22 @@ export default class Schema {
 
   createSchemaFromJSON(text) {
     try {
+      fromJSON = true;
+      this.elements = new Map();
+      document.getElementById("schemaContainer").innerHTML = null;
+
       const result = this.processObject(JSON.parse(text), null);
       document.getElementById("schemaContainer").appendChild(result.getElementGraphical())
     } catch (error) {
       console.log(error)
+    } finally {
+      fromJSON = false; 
     }
   }
 
   processObject(object) {
     const mainElement = this.getObject(object, "main");
     mainElement.setPrimary(true);
-    console.log(mainElement)
     return mainElement;
   }
 

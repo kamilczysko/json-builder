@@ -1,7 +1,6 @@
 export function createSchemaFromJSON(text, createElement) {
     try {
         const result = processObject(JSON.parse(text), null, (name, attributes, list) => {createElement(name, attributes, list)});
-        console.log(result);
         return result;
     } catch(error) {
         console.log(error)
@@ -9,6 +8,7 @@ export function createSchemaFromJSON(text, createElement) {
 }
 
 function processObject(object, name=null, createElementMethod) {
+    console.log(createElementMethod)
     const objectAsMap = new Map(Object.entries(object)); 
     const list = [];
     const attributes = [];

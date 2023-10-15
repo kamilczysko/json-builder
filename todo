@@ -9,9 +9,11 @@
 - jesli glowny json jest wrzucony do innego kontenerka to zmienic primary na tamten kontenerek
 
 {
-     "a":{
-"b": {
-"d": [1,2,3]
-}
-}
+     "fest lista": [
+          {
+               "element-3": {
+                    "a": "b"
+               }
+          }
+     ]
 }

@@ -143,7 +143,7 @@ export default class Element {
       }
       const data = this.getChildrenAsJSON(true);
       if (data) {
-        return "\"" + this.name + "\":[" + this.getChildrenAsJSON(true) + "]";
+          return "\"" + this.name + "\":[" + data + "]";
       } else {
         return "\"" + this.name + "\":[]";
       }
@@ -191,14 +191,21 @@ export default class Element {
     return result.slice(0, -1);
   }
 
-  getChildrenAsJSON(asList = false) {
+  getChildrenAsJSON(returnAsListElement = false) {
     let result = "";
 
     this.children.forEach(child => {
-      if (this.isArray && asList) {
-        result += "{" + child.getJSON() + "},";
+      if (this.isArray){// && returnAsListElement) {
+        const item = child.getJSON(true); 
+        if(item) {
+          if(child.isArray) {
+            result +=  "{"+item +"},";
+          } else {
+            result +=  item +",";
+          }
+        }
       } else {
-        result += child.getJSON(asList) + ",";
+        result += child.getJSON(returnAsListElement) + ",";
       }
     })
 

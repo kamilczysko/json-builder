@@ -1,5 +1,6 @@
 import Schema from "schema"
 
+
 const schema = new Schema();
 
 document.getElementById("schemaContainer").ondblclick = (event) => {

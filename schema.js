@@ -95,14 +95,14 @@ export default class Schema {
     this.updateJSON();
   }
 
-  createElementForSchema(name, attributes, list) {
+  createElementForSchema(name, attributes, list, hasListOfChildren=false) {
     const newId = "element-" + this.currentId;
     const newElement = new ElementGUI(newId, name, { x: 0, y: 0 });
 
     newElement.getElement().setList([...list]);
     newElement.getElement().setAttributes(structuredClone(attributes));
     const isArray = list != null && list.length > 0;
-    newElement.setIsArray(isArray)
+    newElement.setIsArray(isArray||hasListOfChildren)
 
     newElement.setOnSelect((id) => this.selectElement(id));
     newElement.setOnChange(() => {
@@ -291,10 +291,14 @@ export default class Schema {
     }
     const mainElement = this.getMainElement()
     let json = null
+    try{
     if (mainElement) {
+      console.log(mainElement.getElement().getJSON())
       json = JSON.stringify(JSON.parse( mainElement.getElement().getJSON()), null, 5)
     }
     document.getElementById("textarea").value = json;
+    } catch (error){
+  console.log(error)}
   }
 
   removeElement(id) {
@@ -358,17 +362,12 @@ export default class Schema {
 
     const objAsMap = new Map(Object.entries(object));
     objAsMap.forEach((value, key) => {
-      console.log("array value: ")
-      console.log(value)
       if (this.isArray(value)) {
         //support also list of objects
         let isArrayWithObjects = Array.from(value).filter(obj => this.isObject(obj)).length > 0;
         if (isArrayWithObjects) {
           listOfChildren.push(this.getObject(value, key))
         } else {
-          // list = Array.from(value)
-          console.log(value+" - "+key)
-          // children.push(this.getObject(value, key));
           children.push(this.createElementForSchema(key, [], value));
         }
       } else if (this.isStringOrNumber(value)) {
@@ -378,8 +377,11 @@ export default class Schema {
         children.push(this.getObject(value, key));
       }
     });
-    const newElement = this.createElementForSchema(name, attributes, list);
+    const newElement = this.createElementForSchema(name, attributes, list, listOfChildren.length > 0);
     children.forEach(child => {
+      newElement.addChild(child);
+    })
+    listOfChildren.forEach(child => {
       newElement.addChild(child);
     })
     return newElement;

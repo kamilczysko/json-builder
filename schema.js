@@ -95,9 +95,9 @@ export default class Schema {
     this.updateJSON();
   }
 
-  createElement(name, attributes, list) {
+  createElementForSchema(name, attributes, list) {
     const newId = "element-" + this.currentId;
-    const newElement = new ElementGUI(newId, name, { x: 100, y: 100 });
+    const newElement = new ElementGUI(newId, name, { x: 0, y: 0 });
 
     newElement.getElement().setList([...list]);
     newElement.getElement().setAttributes(structuredClone(attributes));
@@ -292,7 +292,7 @@ export default class Schema {
     const mainElement = this.getMainElement()
     let json = null
     if (mainElement) {
-      json = JSON.stringify(JSON.parse("{" + mainElement.getElement().getJSON() + "}"), null, 5)
+      json = JSON.stringify(JSON.parse( mainElement.getElement().getJSON()), null, 5)
     }
     document.getElementById("textarea").value = json;
   }
@@ -353,7 +353,7 @@ export default class Schema {
     let children = [];
 
     if (object == null) {
-      return this.createElement(name, [], []);
+      return this.createElementForSchema(name, [], []);
     }
 
     const objAsMap = new Map(Object.entries(object));
@@ -373,7 +373,7 @@ export default class Schema {
         children.push(this.getObject(value, key));
       }
     });
-    const newElement = this.createElement(name, attributes, list);
+    const newElement = this.createElementForSchema(name, attributes, list);
     children.forEach(child => {
       console.log(child)
       newElement.addChild(child);

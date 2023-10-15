@@ -1,5 +1,4 @@
 import Schema from "schema"
-import * as jsonparser from "jsonparser"
 
 const schema = new Schema();
 
@@ -63,19 +62,3 @@ function copyToClipboard(text) {
         }
     }
 }
-
-//TODO copy paste
-// let savedElement = null;
-
-// document.body.onkeydown = (ev) => {
-//     ev = ev || window.event; 
-//     var key = ev.which || ev.keyCode;
-    
-//     //todo FIX WITH CTRL
-//     if (key == 86) {
-//         schema.addCopiedElement(savedElement);
-//     }
-//     else if (key == 67) {
-//         savedElement = schema.getSelectedElement();
-//     }
-// }

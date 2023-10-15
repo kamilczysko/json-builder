@@ -3,6 +3,7 @@
 - poprawić dodawanie atrybutów, +++++
 - tab dotwarza tez nowy atrybut - nie da się, za duzo roboty z szukaniem, nie warto------
 - czasem jest problem z przesuwaniem obiektu, wywala rodzica ++++++
-- tworzenie schematu z jsona 
+- tworzenie schematu z jsona ++++ chyba działa
+- formatowanie jsona jak wpisujemy z palca, moze podswietlanie skladni
 - poprawić wyświetlanie json, albo objekt primary jest podstawoy, albo na polu mozna ustawiac jeszcze inne ktore tez beda primary
 - jesli glowny json jest wrzucony do innego kontenerka to zmienic primary na tamten kontenerek

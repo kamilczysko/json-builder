@@ -24,6 +24,9 @@ export default class ElementGUI {
         this.guiElement = graphicsElements.main;
         this.guiElementContainer = graphicsElements.elementContainer;
         this.copyButton = graphicsElements.copyButton;
+        this.inputName = graphicsElements.inputName;
+        this.isArrayCheckbox = graphicsElements.isArrayCheckbox;
+        this.checkbox = graphicsElements.checkbox;
     }
 
     initGraphicalRepresentation(id, position, name) {
@@ -81,7 +84,7 @@ export default class ElementGUI {
         let isArrayCheckbox = document.createElement("input");
         isArrayCheckbox.type = "checkbox"
         isArrayCheckbox.oninput = () => {
-            this.element.setIsArray(isArrayCheckbox.checked == true);
+            this.element.setIsArray(isArrayCheckbox.checked);
             this.typeChangeEvent();
             this.onChange();
         }
@@ -162,7 +165,9 @@ export default class ElementGUI {
             this.onChange();
         });
 
-        return { main: mainElement, elementContainer: elementContainer, copyButton: copyButton };
+        return { main: mainElement, elementContainer: elementContainer, 
+            copyButton: copyButton, inputName:inputName, isArrayCheckbox:isArrayCheckbox,
+        checkbox: checkbox };
     }
 
     getId() {
@@ -226,6 +231,11 @@ export default class ElementGUI {
     setPrimary(primary) {
         if (primary) {
             this.copyButton.style.display = "none"
+            this.inputName.style.display = "none"
+            this.checkbox.style.display = "none"
+        } else {
+            this.inputName.style.display = "block"
+            this.checkbox.style.display = "block"
         }
         this.element.setPrimary(primary);
     }
@@ -305,15 +315,21 @@ export default class ElementGUI {
         this.onChange();
     }
 
+    setIsArray(isArray) {
+        this.isArrayCheckbox.checked = isArray;
+        this.element.setIsArray(isArray);
+    }
+
     clone() {
         let tmpIDX = this.globalId();
         const newId = "element_" + tmpIDX
-        const copied = new ElementGUI(newId, this.name + "-copy-" + tmpIDX, null);
+        const copied = new ElementGUI(newId, this.name + "-copy-" + tmpIDX, {x:0, y:0});
 
         copied.getElement().setList([...this.element.getList()]);
         copied.getElement().setAttributes(structuredClone(this.element.getAttributes()));
         copied.getElement().setParent(this.element.getParent())
-        copied.getElement().setIsArray(this.element.isArray)
+        
+        copied.setIsArray(this.element.isArray)
 
         copied.setOnChange(this.onChange);
         copied.setOnAddChild(this.generateChild);

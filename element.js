@@ -134,7 +134,7 @@ export default class Element {
 
   getJSON(asArray = false) {
     let namePrefix = "\"" + this.name + "\":";
-    if (asArray) {
+    if (asArray || this.isPrimary) {
       namePrefix = "";
     }
     if (this.isArray) {

@@ -7,13 +7,149 @@
 - formatowanie jsona jak wpisujemy z palca, moze podswietlanie skladni
 - poprawić wyświetlanie json, albo objekt primary jest podstawoy, albo na polu mozna ustawiac jeszcze inne ktore tez beda primary
 - jesli glowny json jest wrzucony do innego kontenerka to zmienic primary na tamten kontenerek
+- nie do końca wyświetla dobrze jsona który ma listę z listami
+#tc1 attributes+
+{
+     "uwustimates": {
+          "test": {
+               "asdf": "fffff",
+               "asdsdff": 4345,
+               "asdff": 234.3434,
+               "hfdgh": "sdfg"
+          }
+     }
+}
+
+
+#tc2 attributes + list+
+{
+     "uwustimates": {
+          "": "",
+          "test": {
+               "asdf": "fffff",
+               "asdsdff": 4345,
+               "asdff": 234.3434,
+               "hfdgh": "sdfg"
+          },
+          "list-test": [
+               "fwefwe",
+               "wewfwef",
+               "efwefewfw",
+               "fewfwf"
+          ]
+     }
+}
+
+
+#tc3 list with objects --- zle parsuje liste
+{
+     "uwustimates": {
+          "list-with-objects": [
+               {
+                    "asdasd": "fsdfsd"
+               },
+               {
+                    "fwefwf": "gwergwegr"
+               }
+          ]
+     }
+}
+
+#tc4 objests list in list
+{
+     "uwustimates": {
+          "": "",
+          "test": {
+               "asdf": "fffff",
+               "asdsdff": 4345,
+               "asdff": 234.3434,
+               "hfdgh": "sdfg"
+          },
+          "list-test": [
+               "fwefwe",
+               "wewfwef",
+               "efwefewfw",
+               "fewfwf"
+          ],
+          "list-with-objects": [
+               {
+                    "asdasd": "fsdfsd"
+               },
+               {
+                    "fwefwf": "gwergwegr"
+               }
+          ],
+          "list-with-objects-as-arrays": [
+               {
+                    "listObj1-arr": [
+                         "wefweff"
+                    ]
+               },
+               {
+                    "listObj2-arr": [
+                         "ergergerg"
+                    ]
+               }
+          ]
+     }
+}
+
+#tc5 param in main
 
 {
-     "fest lista": [
-          {
-               "element-3": {
-                    "a": "b"
+     "testdupa": "wutututu",
+     "uwustimates": {
+          "": "",
+          "test": {
+               "asdf": "fffff",
+               "asdsdff": 4345,
+               "asdff": 234.3434,
+               "hfdgh": "sdfg"
+          },
+          "list-test": [
+               "fwefwe",
+               "wewfwef",
+               "efwefewfw",
+               "fewfwf"
+          ],
+          "list-with-objects": [
+               {
+                    "asdasd": "fsdfsd"
+               },
+               {
+                    "fwefwf": "gwergwegr"
                }
+          ],
+          "list-with-objects-as-arrays": [
+               {
+                    "listObj1-arr": [
+                         "wefweff"
+                    ]
+               },
+               {
+                    "listObj2-arr": [
+                         "ergergerg"
+                    ]
+               }
+          ]
+     }
+}
+
+
+
+{
+     "test": [
+          {
+               "a": [
+                    "b",
+                    "a"
+               ]
+          },
+          {
+               "v": [
+                    "e",
+                    "r"
+               ]
           }
      ]
 }

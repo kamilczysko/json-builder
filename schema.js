@@ -57,7 +57,7 @@ export default class Schema {
     const newId = "element-" + this.currentId;
     const element = new ElementGUI(newId, newId, position);
     element.setOnSelect((id) => this.selectElement(id));
-    element.setOnChange(() => {this.updateJSON();});
+    element.setOnChange(() => { this.updateJSON(); });
     element.setOnTypeChange(() => this.updateElementTypeData());
     element.setChildProvider((childId) => this.getChildElement(childId));
     element.setOnAddChild((parentId) => this.addElementToParent(parentId));
@@ -95,14 +95,14 @@ export default class Schema {
     this.updateJSON();
   }
 
-  createElementForSchema(name, attributes, list, hasListOfChildren=false) {
+  createElementForSchema(name, attributes, list, hasListOfChildren = false) {
     const newId = "element-" + this.currentId;
     const newElement = new ElementGUI(newId, name, { x: 0, y: 0 });
 
     newElement.getElement().setList([...list]);
     newElement.getElement().setAttributes(structuredClone(attributes));
     const isArray = list != null && list.length > 0;
-    newElement.setIsArray(isArray||hasListOfChildren)
+    newElement.setIsArray(isArray || hasListOfChildren)
 
     newElement.setOnSelect((id) => this.selectElement(id));
     newElement.setOnChange(() => {
@@ -286,19 +286,20 @@ export default class Schema {
   }
 
   updateJSON() {
-    if(fromJSON) {
+    if (fromJSON) {
       return; //prevent refreshing when done from json
     }
     const mainElement = this.getMainElement()
     let json = null
-    try{
-    if (mainElement) {
-      // console.log(mainElement.getElement().getJSON())
-      json = JSON.stringify(JSON.parse( mainElement.getElement().getJSON()), null, 5)
+    try {
+      if (mainElement) {
+        // console.log(mainElement.getElement().getJSON())
+        json = JSON.stringify(JSON.parse(mainElement.getElement().getJSON()), null, 5)
+      }
+      document.getElementById("textarea").value = json;
+    } catch (error) {
+      console.log(error)
     }
-    document.getElementById("textarea").value = json;
-    } catch (error){
-  console.log(error)}
   }
 
   removeElement(id) {
@@ -325,7 +326,7 @@ export default class Schema {
     } catch (error) {
       console.log(error)
     } finally {
-      fromJSON = false; 
+      fromJSON = false;
     }
   }
 
@@ -350,7 +351,7 @@ export default class Schema {
     return typeof value == "string" || typeof value == "number"
   }
 
-  getObject(object, name) {
+  getObject(object, name, getAsListElement = false) {
     let listOfChildren = [];
     let list = [];
     let attributes = [];
@@ -366,15 +367,30 @@ export default class Schema {
         //support also list of objects
         let isArrayWithObjects = Array.from(value).filter(obj => this.isObject(obj)).length > 0;
         if (isArrayWithObjects) {
-          listOfChildren.push(this.getObject(value, key))
+          listOfChildren.push(this.getObject(value, key, true))
         } else {
           children.push(this.createElementForSchema(key, [], value));
         }
       } else if (this.isStringOrNumber(value)) {
         attributes.push({ key: key, value: value });
       }
-      if (this.isObject(value)) {
+      if (this.isObject(value)) { 
+        if (this.hasOnlyOneAttribute(object)) {
+          Array.from(Object.entries((value))).forEach((v, i) => {
+                console.log(Object.values(v)[1])
+                console.log(i)
+                if(Array.from(Object.values(v)[1]).filter(a => this.isObject(a)).length > 0) {
+                  // Array.from(Object.values(v)[1]).forEach(b => 
+                  //   children.push(this.getObject(b, Object.values(v)[0]))
+                  //   )
+                  children.push(this.getObject(value, key));
+                } else {
+                  children.push(this.createElementForSchema(Object.values(v)[0], [], Object.values(v)[1]));
+                }
+          })
+        } else {
         children.push(this.getObject(value, key));
+      }
       }
     });
     const newElement = this.createElementForSchema(name, attributes, list, this.isArray(object));
@@ -385,5 +401,17 @@ export default class Schema {
       newElement.addChild(child);
     })
     return newElement;
+  }
+
+  hasOnlyOneAttribute(value) {
+    let res = true;
+    Array.from(Object.values((value))).forEach(val => {
+      Array.from(Object.values((val))).forEach(v => {
+        if(!this.isArray(v)) {
+          res = false
+        }
+      })
+    })
+    return res;
   }
 }

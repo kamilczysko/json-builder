@@ -30,29 +30,29 @@
 <body>
   <div id="schemaContainer" class="schemaContainer">
   </div>
-  <div class="json-panel" id="json-panel">
-    <div>
-      
-    </div>
-    <div>
-      <div id="copyPanel">
-        <button id="json-container-show-button">⇶ </button>
-        <div>
-          <span id="copyInfo" class="copyInfo-hidden">copied!</span>
-          <button id="copyToClipboardButton">📋</button>
+  <div class="control-panel" id="control-panel">
+    <div class="json-panel" id="json-panel">
+      <div>
+        <div id="copyPanel">
+          <button id="json-container-show-button">⇶ </button>
+          <div>
+            <span id="copyInfo" class="copyInfo-hidden">copied!</span>
+            <button id="copyToClipboardButton">📋</button>
+          </div>
         </div>
+        <textarea class="jsonContainer" id="textarea" cols="50" rows="20"
+          placeholder="Paste here your json"></textarea>
       </div>
-      <textarea class="jsonContainer" id="textarea" cols="50" rows="20" placeholder="Your JSON will be here"></textarea>
-    </div>
-  </div>
-  <div class="panel" id="panel">
-    <p>Attributes:</p>
-    <div id="attributes"></div>
-    <div id="atributePanel">
-      <button id="addAttribute">add</button>
-      <button id="clearAttributes">clear</button>
     </div>
 
+    <div class="panel" id="panel">
+      <p>Attributes:</p>
+      <div id="attributes"></div>
+      <div id="atributePanel">
+        <button id="addAttribute">add</button>
+        <button id="clearAttributes">clear</button>
+      </div>
+    </div>
   </div>
 
   <script src="index.js" type="module" charset="utf-8"></script>

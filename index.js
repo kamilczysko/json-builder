@@ -11,33 +11,48 @@ document.getElementById("schemaContainer").ondblclick = (event) => {
     schema.addElement(position, null, null, false);
 }
 
-document.getElementById("textarea").oninput = () => {
-    schema.createSchemaFromJSON(document.getElementById("textarea").value);
+document.getElementById("textarea").oninput = (event) => {
+    try {
+        schema.createSchemaFromJSON(document.getElementById("textarea").value);
+        document.getElementById("textarea").classList.remove("error")
+    } catch {
+        document.getElementById("textarea").classList.add("error")
+    }
 }
+
+document.getElementById("textarea").onblur = (event) => {
+    const json = document.getElementById("textarea").value;
+    console.log(JSON.stringify(JSON.parse(json), null, 5))
+    document.getElementById("textarea").value = JSON.stringify(JSON.parse(json), null, 5);
+    event.preventDefault();
+}
+
 
 let isJSONSchemaContainerVisible = true;
 
 document.getElementById("json-container-show-button").onclick = () => {
-    if(isJSONSchemaContainerVisible) {
+    if (isJSONSchemaContainerVisible) {
         isJSONSchemaContainerVisible = false;
-        document.getElementById("json-panel").classList.remove("visible");
-        document.getElementById("json-panel").classList.add("hidden");
+        document.getElementById("control-panel").classList.remove("visible");
+        document.getElementById("control-panel").classList.add("hidden");
+        // document.getElementById("json-panel").style.position = "absolute"
     } else {
         isJSONSchemaContainerVisible = true;
-        document.getElementById("json-panel").classList.remove("hidden");
-        document.getElementById("json-panel").classList.add("visible");
+        document.getElementById("control-panel").classList.remove("hidden");
+        document.getElementById("control-panel").classList.add("visible");
+        // document.getElementById("json-panel").style.position = "sticky"
     }
 }
 
 document.getElementById("copyToClipboardButton").onclick = () => {
-        document.getElementById("copyInfo").classList.add("copyInfo-visible");
-        document.getElementById("copyInfo").classList.remove("copyInfo-hidden");
-        setTimeout(() => {
-            document.getElementById("copyInfo").classList.add("copyInfo-hidden");
+    document.getElementById("copyInfo").classList.add("copyInfo-visible");
+    document.getElementById("copyInfo").classList.remove("copyInfo-hidden");
+    setTimeout(() => {
+        document.getElementById("copyInfo").classList.add("copyInfo-hidden");
         document.getElementById("copyInfo").classList.remove("copyInfo-visible");
-        }, 500);
+    }, 500);
 
-        copyToClipboard(document.getElementById("textarea").value);
+    copyToClipboard(document.getElementById("textarea").value);
 }
 
 function copyToClipboard(text) {

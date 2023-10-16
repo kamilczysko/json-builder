@@ -316,18 +316,18 @@ export default class Schema {
   /****create from json*****DONT touch****/
 
   createSchemaFromJSON(text) {
-    try {
+    // try {
       fromJSON = true;
       this.elements = new Map();
       document.getElementById("schemaContainer").innerHTML = null;
 
       const result = this.processObject(JSON.parse(text), null);
       document.getElementById("schemaContainer").appendChild(result.getElementGraphical())
-    } catch (error) {
-      console.log(error)
-    } finally {
+    // } catch (error) {
+    //   console.log(error)
+    // } finally {
       fromJSON = false;
-    }
+    // }
   }
 
   processObject(object) {

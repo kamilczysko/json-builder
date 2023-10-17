@@ -351,13 +351,17 @@ export default class Schema {
     return typeof value == "string" || typeof value == "number"
   }
 
-  getObject(object, name, getAsListElement = false) {
+  getObject(object, name) {
     let listOfChildren = [];
     let list = [];
     let attributes = [];
     let children = [];
 
+    console.log("OBJECT:")
+    console.log(object)
+
     if (object == null) {
+      console.log("return empty")
       return this.createElementForSchema(name, [], []);
     }
 
@@ -367,7 +371,8 @@ export default class Schema {
         //support also list of objects
         let isArrayWithObjects = Array.from(value).filter(obj => this.isObject(obj)).length > 0;
         if (isArrayWithObjects) {
-          listOfChildren.push(this.getObject(value, key, true))
+          console.log("withObjects")
+          listOfChildren.push(this.getObject(value, key))
         } else {
           children.push(this.createElementForSchema(key, [], value));
         }
@@ -400,7 +405,7 @@ export default class Schema {
 
   hasOnlyOneAttribute(value) {
     let res = true;
-    Array.from(Object.values((value))).forEach(val => {
+    Array.from(Object.values((value))).filter(val => val).forEach(val => {
       Array.from(Object.values((val))).forEach(v => {
         if(!this.isArray(v)) {
           res = false

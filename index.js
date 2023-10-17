@@ -15,14 +15,15 @@ document.getElementById("textarea").oninput = (event) => {
     try {
         schema.createSchemaFromJSON(document.getElementById("textarea").value);
         document.getElementById("textarea").classList.remove("error")
-    } catch {
+    } catch (error){
+        console.log(error)
         document.getElementById("textarea").classList.add("error")
     }
 }
 
 document.getElementById("textarea").onblur = (event) => {
     const json = document.getElementById("textarea").value;
-    console.log(JSON.stringify(JSON.parse(json), null, 5))
+    // console.log(JSON.stringify(JSON.parse(json), null, 5))
     document.getElementById("textarea").value = JSON.stringify(JSON.parse(json), null, 5);
     event.preventDefault();
 }

@@ -293,7 +293,6 @@ export default class Schema {
     let json = null
     try {
       if (mainElement) {
-        // console.log(mainElement.getElement().getJSON())
         json = JSON.stringify(JSON.parse(mainElement.getElement().getJSON()), null, 5)
       }
       document.getElementById("textarea").value = json;
@@ -316,18 +315,13 @@ export default class Schema {
   /****create from json*****DONT touch****/
 
   createSchemaFromJSON(text) {
-    // try {
       fromJSON = true;
       this.elements = new Map();
       document.getElementById("schemaContainer").innerHTML = null;
 
       const result = this.processObject(JSON.parse(text), null);
       document.getElementById("schemaContainer").appendChild(result.getElementGraphical())
-    // } catch (error) {
-    //   console.log(error)
-    // } finally {
       fromJSON = false;
-    // }
   }
 
   processObject(object) {

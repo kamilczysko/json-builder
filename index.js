@@ -3,6 +3,46 @@ import Schema from "schema"
 
 const schema = new Schema();
 
+
+let foundItems = []
+let actualSelectedIndex = 0
+
+document.getElementById("search").oninput = (event) => {
+    actualSelectedIndex = 0;
+    foundItems = []
+    document.getElementById("foundInfo").innerText = ""
+    foundItems = schema.findByName(document.getElementById("search").value);
+    if(foundItems.length > 0){
+        document.getElementById("foundInfo").innerText = "0/" + (foundItems.length-1)
+    }
+}
+
+document.getElementById("nextButton").onclick = () => {
+    if(foundItems.length == 0) {
+        return
+    }
+    actualSelectedIndex = ((++actualSelectedIndex) + foundItems.length) % foundItems.length
+    document.getElementById("foundInfo").innerText = "" + actualSelectedIndex + "/" + (foundItems.length-1)
+    const actualId = foundItems[actualSelectedIndex].getId();
+    document.getElementById(actualId).scrollIntoView();
+    foundItems[actualSelectedIndex].select(true);
+}
+
+document.getElementById("prevButton").onclick = () => {
+    if(foundItems.length == 0) {
+        return
+    }
+    if(actualSelectedIndex == 0) {
+        actualSelectedIndex = foundItems.length - 1;
+    } else {
+        actualSelectedIndex --;
+    }
+    document.getElementById("foundInfo").innerText = "" + actualSelectedIndex + "/" + (foundItems.length-1)
+    const actualId = foundItems[actualSelectedIndex].getId();
+    document.getElementById(actualId).scrollIntoView();
+    foundItems[actualSelectedIndex].select(true);
+}
+
 document.getElementById("schemaContainer").ondblclick = (event) => {
     const position = {
         x: event.offsetX,
@@ -15,7 +55,7 @@ document.getElementById("textarea").oninput = (event) => {
     try {
         schema.createSchemaFromJSON(document.getElementById("textarea").value);
         document.getElementById("textarea").classList.remove("error")
-    } catch (error){
+    } catch (error) {
         console.log(error)
         document.getElementById("textarea").classList.add("error")
     }

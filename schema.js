@@ -136,7 +136,7 @@ export default class Schema {
   selectElement(id) {
     Array.from(this.elements.values()).forEach(element => {
       if (element.getId() != id) {
-        element.setSelected(false);
+        element.unselect();
       }
     })
     this.selectedElementId = id;
@@ -311,6 +311,10 @@ export default class Schema {
     this.selectedElementId = null;
   }
 
+
+  findByName(name) {
+    return Array.from(this.elements.values()).filter(value => value.getName().toLowerCase().includes(name.toLowerCase()))
+  }
 
   /****create from json*****DONT touch****/
 

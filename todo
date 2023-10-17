@@ -8,6 +8,19 @@
 - poprawić wyświetlanie json, albo objekt primary jest podstawoy, albo na polu mozna ustawiac jeszcze inne ktore tez beda primary
 - jesli glowny json jest wrzucony do innego kontenerka to zmienic primary na tamten kontenerek
 - nie do końca wyświetla dobrze jsona który ma listę z listami
+
+
+{
+     "a": [
+          {
+               "d": {
+                    "a": "fd"
+               },
+               "b": null
+          }
+     ]
+}
+
 #tc1 attributes+
 {
      "uwustimates": {

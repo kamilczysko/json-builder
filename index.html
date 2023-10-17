@@ -4,7 +4,8 @@
 <head>
   <meta charset="utf-8">
   <title>Graphical JSON building tool that you never needed</title>
-  <meta name="description" content="Tool that let you build JSON in more visual way. Maybe it's unnecessary, but may be fun."/>
+  <meta name="description"
+    content="Tool that let you build JSON in more visual way. Maybe it's unnecessary, but may be fun." />
 
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type=“image/x-icon” href="favicon.ico?">
@@ -41,8 +42,7 @@
             <button id="copyToClipboardButton">📋</button>
           </div>
         </div>
-        <textarea class="jsonContainer" id="textarea" cols="50" rows="20"
-          placeholder="Paste your json here"></textarea>
+        <textarea class="jsonContainer" id="textarea" cols="50" rows="20" placeholder="Paste your json here"></textarea>
       </div>
     </div>
 
@@ -53,6 +53,13 @@
         <button id="addAttribute">add</button>
         <button id="clearAttributes">clear</button>
       </div>
+    </div>
+
+    <div class="search">
+      <p id="foundInfo"></p>
+      <button id="prevButton"><<<</button>
+      <input type="text" name="" id="search" placeholder="search by name">
+      <button id="nextButton">>>></button>
     </div>
   </div>
 

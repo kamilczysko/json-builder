@@ -174,6 +174,10 @@ export default class ElementGUI {
         return this.id;
     }
 
+    getName() {
+        return this.name;
+    }
+
     getElementGraphical() {
         return this.guiElement;
     }
@@ -240,9 +244,15 @@ export default class ElementGUI {
         this.element.setPrimary(primary);
     }
 
-    setSelected(selected) {
+    unselect() {
         this.guiElement.classList.remove("selected");
-        this.isSelected = selected;
+        this.isSelected = false;
+    }
+
+    select() {
+        this.isSelected = true;
+        this.guiElement.classList.add("selected");
+        this.onSelect(this.id);
     }
 
     setOnSelect(onSelect) {

@@ -249,6 +249,7 @@ body {
     width: 100%;
     min-height: 100vh;
     margin: 0px;
+    overflow: scroll;
 }
 
 .schemaContainer::before {
@@ -370,4 +371,45 @@ body {
 
 .error {
     border: 2px dotted red;
+}
+
+.search {
+    position: sticky;
+    top: 95%;
+    background: none;
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content: end;
+    z-index: 200;
+    gap: 3px;
+}
+
+.search input {
+    outline: none;
+    width: 50%;
+    background: rgb(255, 247, 247);
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 400;
+    line-height: 1.1;
+    border: 1px dashed black;
+}
+
+.search button {
+    border:  none;
+    background: none;
+    width: 40px;
+    cursor: pointer;
+    position: sticky;
+    bottom: 10px;
+}
+
+.search button:hover {
+    font-weight: bold;
+}
+
+.search button:active {
+    font-weight: bolder;
+    scale: 1.2;
 }

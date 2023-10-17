@@ -8,12 +8,28 @@ let foundItems = []
 let actualSelectedIndex = 0
 
 document.getElementById("search").oninput = (event) => {
+    search();
+}
+
+document.getElementById("search").onkeydown = (event) => {
+    if(event.key != "Enter") {return}
+    search()
+}
+
+function search() {
     actualSelectedIndex = 0;
     foundItems = []
+    if(document.getElementById("search").value == "") {
+        document.getElementById("foundInfo").innerText = ""
+        return
+    }
     document.getElementById("foundInfo").innerText = ""
     foundItems = schema.findByName(document.getElementById("search").value);
     if(foundItems.length > 0){
-        document.getElementById("foundInfo").innerText = "0/" + (foundItems.length-1)
+        document.getElementById("foundInfo").innerText = "" + (actualSelectedIndex+1) + "/" + (foundItems.length)
+        const actualId = foundItems[actualSelectedIndex].getId();
+        document.getElementById(actualId).scrollIntoView();
+        foundItems[actualSelectedIndex].select(true);
     }
 }
 
@@ -22,10 +38,7 @@ document.getElementById("nextButton").onclick = () => {
         return
     }
     actualSelectedIndex = ((++actualSelectedIndex) + foundItems.length) % foundItems.length
-    document.getElementById("foundInfo").innerText = "" + actualSelectedIndex + "/" + (foundItems.length-1)
-    const actualId = foundItems[actualSelectedIndex].getId();
-    document.getElementById(actualId).scrollIntoView();
-    foundItems[actualSelectedIndex].select(true);
+    selectFoundElement();
 }
 
 document.getElementById("prevButton").onclick = () => {
@@ -37,7 +50,12 @@ document.getElementById("prevButton").onclick = () => {
     } else {
         actualSelectedIndex --;
     }
-    document.getElementById("foundInfo").innerText = "" + actualSelectedIndex + "/" + (foundItems.length-1)
+    document.getElementById("foundInfo").innerText = "" + (actualSelectedIndex+1) + "/" + (foundItems.length)
+    selectFoundElement();
+}
+
+function selectFoundElement() {
+    document.getElementById("foundInfo").innerText = "" + (actualSelectedIndex+1) + "/" + (foundItems.length)
     const actualId = foundItems[actualSelectedIndex].getId();
     document.getElementById(actualId).scrollIntoView();
     foundItems[actualSelectedIndex].select(true);

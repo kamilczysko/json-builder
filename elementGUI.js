@@ -237,6 +237,7 @@ export default class ElementGUI {
             this.copyButton.style.display = "none"
             this.inputName.style.display = "none"
             this.checkbox.style.display = "none"
+            this.setName("-----")
         } else {
             this.inputName.style.display = "block"
             this.checkbox.style.display = "block"

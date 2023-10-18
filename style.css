@@ -19,14 +19,14 @@ body {
     background-color: rgba(169, 169, 255, 1);
     cursor: pointer;
     min-width: 15%;
-    max-width: 20%;
+    max-width: 70%;
     border-radius: 5px;
     padding: 5px;
     box-shadow: 1px 1px 5px black;
 }
 
 .isChild {
-    max-width: 90%;
+    flex: 5 0 33%; /* explanation below */
 }
 
 .element:hover {

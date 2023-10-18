@@ -81,6 +81,8 @@ document.getElementById("textarea").oninput = (event) => {
 
 document.getElementById("textarea").onblur = (event) => {
     const json = document.getElementById("textarea").value;
+    console.log(json)
+    if(json==null || json == "") {return;}
     // console.log(JSON.stringify(JSON.parse(json), null, 5))
     document.getElementById("textarea").value = JSON.stringify(JSON.parse(json), null, 5);
     event.preventDefault();

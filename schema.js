@@ -319,13 +319,13 @@ export default class Schema {
   /****create from json*****DONT touch****/
 
   createSchemaFromJSON(text) {
-      fromJSON = true;
-      this.elements = new Map();
-      document.getElementById("schemaContainer").innerHTML = null;
+    fromJSON = true;
+    this.elements = new Map();
+    document.getElementById("schemaContainer").innerHTML = null;
 
-      const result = this.processObject(JSON.parse(text), null);
-      document.getElementById("schemaContainer").appendChild(result.getElementGraphical())
-      fromJSON = false;
+    const result = this.processObject(JSON.parse(text), null);
+    document.getElementById("schemaContainer").appendChild(result.getElementGraphical())
+    fromJSON = false;
   }
 
   processObject(object) {
@@ -355,11 +355,7 @@ export default class Schema {
     let attributes = [];
     let children = [];
 
-    console.log("OBJECT:")
-    console.log(object)
-
     if (object == null) {
-      console.log("return empty")
       return this.createElementForSchema(name, [], []);
     }
 
@@ -369,7 +365,6 @@ export default class Schema {
         //support also list of objects
         let isArrayWithObjects = Array.from(value).filter(obj => this.isObject(obj)).length > 0;
         if (isArrayWithObjects) {
-          console.log("withObjects")
           listOfChildren.push(this.getObject(value, key))
         } else {
           children.push(this.createElementForSchema(key, [], value));
@@ -377,20 +372,30 @@ export default class Schema {
       } else if (this.isStringOrNumber(value)) {
         attributes.push({ key: key, value: value });
       }
-      if (this.isObject(value)) { 
+      if (this.isObject(value)) {
         if (this.hasOnlyOneAttribute(object)) {
-          Array.from(Object.entries((value))).forEach((v, i) => {
-                if(Array.from(Object.values(v)[1]).filter(a => this.isObject(a)).length > 0) {
-                  children.push(this.getObject(value, key));
-                } else {
-                  children.push(this.createElementForSchema(Object.values(v)[0], [], Object.values(v)[1]));
-                }
-          })
+          if (Array.from(Object.entries((value))).length == 0) {
+            children.push(this.createElementForSchema(key, [], []));
+          } else {
+            Array.from(Object.entries((value))).forEach((v, i) => {
+              if (Array.from(Object.values(v)[1]).filter(a => this.isObject(a)).length > 0) {
+                children.push(this.getObject(value, key));
+              } else {
+                children.push(this.createElementForSchema(Object.values(v)[0], [], Object.values(v)[1]));
+              }
+            })
+          }
         } else {
-        children.push(this.getObject(value, key));
-      }
+          children.push(this.getObject(value, key));
+        }
       }
     });
+    Object.entries((object)).forEach(entry => { //add object with null vlaue
+      const [key, value ] = entry;
+      if(value == null) {
+        children.push(this.createElementForSchema(key, [], []));
+      }
+    })
     const newElement = this.createElementForSchema(name, attributes, list, this.isArray(object));
     children.forEach(child => {
       newElement.addChild(child);
@@ -405,7 +410,7 @@ export default class Schema {
     let res = true;
     Array.from(Object.values((value))).filter(val => val).forEach(val => {
       Array.from(Object.values((val))).forEach(v => {
-        if(!this.isArray(v)) {
+        if (!this.isArray(v)) {
           res = false
         }
       })

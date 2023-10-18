@@ -289,7 +289,7 @@ body {
     transition-timing-function: ease-in-out;
     transition: right rotate;
     transition-duration: .5s;
-    right: -17% !important;
+    right: -25% !important;
 }
 
 .visible {

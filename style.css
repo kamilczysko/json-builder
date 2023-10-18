@@ -247,7 +247,7 @@ body {
     position: relative;
     top: 0px;
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     margin: 0px;
     overflow: scroll;
 }
@@ -373,9 +373,11 @@ body {
 }
 
 .search {
+    /* position: absolute; */
     position: sticky;
+    /* top: 100%; */
+    right: 0px;
     position: -webkit-sticky;
-    top: 98vh;
     background: none;
     height: 30px;
     display: flex;
@@ -427,6 +429,5 @@ body {
 
 .search p {
     height: 20px;
-
     margin-top: 0px;
 }

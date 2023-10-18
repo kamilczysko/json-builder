@@ -281,7 +281,7 @@ body {
 .json-panel {
     position: sticky;
     position: -webkit-sticky;
-    top: 0;
+    top: 5px;
     /* width: 50%; */
 }
 
@@ -375,7 +375,7 @@ body {
 .search {
     position: sticky;
     position: -webkit-sticky;
-    top: 91vh;
+    top: 98vh;
     background: none;
     height: 30px;
     display: flex;

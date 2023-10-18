@@ -27,9 +27,6 @@ function search() {
     foundItems = schema.findByName(document.getElementById("search").value);
     if(foundItems.length > 0){
         document.getElementById("foundInfo").innerText = "" + (actualSelectedIndex+1) + "/" + (foundItems.length)
-        const actualId = foundItems[actualSelectedIndex].getId();
-        document.getElementById(actualId).scrollIntoView();
-        foundItems[actualSelectedIndex].select(true);
     }
 }
 

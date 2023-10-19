@@ -18,8 +18,8 @@ body {
     color: black;
     background-color: rgba(169, 169, 255, 1);
     cursor: pointer;
-    min-width: 15%;
-    max-width: 70%;
+    /* min-width: 15%;
+    max-width: 70%; */
     border-radius: 5px;
     padding: 5px;
     box-shadow: 1px 1px 5px black;
@@ -27,6 +27,7 @@ body {
 
 .isChild {
     flex: 5 0 33%; /* explanation below */
+    min-width: 200px;
 }
 
 .element:hover {
@@ -128,7 +129,7 @@ body {
 .parent {
     border-radius: 15px;
     border: 3px solid black;
-    max-width: 80%;
+    /* max-width: 80%; */
 }
 
 .element-container {

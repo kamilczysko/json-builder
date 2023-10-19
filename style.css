@@ -317,7 +317,8 @@ body {
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    background: none;
+    background: white;
+    border-radius: 10px;
     border: none;
     cursor: pointer;
     font-size: large;

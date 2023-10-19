@@ -27,7 +27,7 @@ body {
 
 .isChild {
     flex: 5 0 33%; /* explanation below */
-    min-width: 200px;
+    min-width: 150px;
 }
 
 .element:hover {

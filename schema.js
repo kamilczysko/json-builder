@@ -95,14 +95,14 @@ export default class Schema {
     this.updateJSON();
   }
 
-  createElementForSchema(name, attributes, list, hasListOfChildren = false) {
+  createElementForSchema(name, attributes, list, hasListOfChildren = false, isEmptyList=false) {
     const newId = "element-" + this.currentId;
     const newElement = new ElementGUI(newId, name, { x: 0, y: 0 });
 
     newElement.getElement().setList([...list]);
     newElement.getElement().setAttributes(structuredClone(attributes));
     const isArray = list != null && list.length > 0;
-    newElement.setIsArray(isArray || hasListOfChildren)
+    newElement.setIsArray(isArray || hasListOfChildren || isEmptyList)
 
     newElement.setOnSelect((id) => this.selectElement(id));
     newElement.setOnChange(() => {
@@ -367,7 +367,7 @@ export default class Schema {
         if (isArrayWithObjects) {
           listOfChildren.push(this.getObject(value, key))
         } else {
-          children.push(this.createElementForSchema(key, [], value));
+          children.push(this.createElementForSchema(key, [], value, false, value.length == 0));
         }
       } else if (this.isStringOrNumber(value)) {
         attributes.push({ key: key, value: value });
